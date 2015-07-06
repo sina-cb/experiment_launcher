@@ -1,0 +1,25 @@
+<launch>
+  <!-- Map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find experiment_launcher)/map/map.yaml" >
+    <param name="frame_id" value="map" />
+  </node>
+
+  <group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf" />
+    <param name="initial_pose_x" value="1" />
+    <param name="initial_pose_y" value="1" />
+    <arg name="initial_pose_a" value="0.0"/>
+    <include file="$(find experiment_launcher)/launch/nested_amcl/run_nested_amcl.launch" />
+  </group>
+
+  <!-- <group ns="robot2">
+    <param name="tf_prefix" value="robot2_tf" />
+    <param name="initial_pose_x" value="-1" />
+    <param name="initial_pose_y" value="1" />
+    <arg name="initial_pose_a" value="0.0"/>
+    <include file="$(find experiment_launcher)/launch/nested_amcl/run_nested_amcl.launch" />
+  </group> -->
+
+  <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find experiment_launcher)/config/multi.vcg"   output="screen" /> -->
+
+</launch>
