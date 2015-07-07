@@ -1,24 +1,46 @@
 <launch>
-  <param name="/use_sim_time" value="true" />
 
-  <!-- start world -->
-  <arg name="world_file"  default="$(env TURTLEBOT_GAZEBO_WORLD_FILE)"/>
+  <!-- World definition -->
+  <arg default="$(env TURTLEBOT_GAZEBO_WORLD_FILE)" name="world_file"/>
+
+  <arg name="base" value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
+  <arg name="battery" value="$(optenv TURTLEBOT_BATTERY /proc/acpi/battery/BAT0)"/>
+  <arg name="stacks" value="$(optenv TURTLEBOT_STACKS hexagons)"/> <!-- circles, hexagons -->
+  <arg name="3d_sensor" value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/> <!-- kinect, asus_xtion_pro -->
+
+  <!-- Start the world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="use_sim_time" value="true"/>
     <arg name="debug" value="false"/>
     <arg name="world_name" value="$(arg world_file)"/>
   </include>
 
-  <!-- define our robots -->
-  <arg name="base"      value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
-  <arg name="battery"   value="$(optenv TURTLEBOT_BATTERY /proc/acpi/battery/BAT0)"/>
-  <arg name="stacks"    value="$(optenv TURTLEBOT_STACKS hexagons)"/>  <!-- circles, hexagons --> 
-  <arg name="3d_sensor" value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/>  <!-- kinect, asus_xtion_pro -->
+  <!-- Find robot description -->
+  <arg default="$(find xacro)/xacro.py '$(find turtlebot_description)/robots/$(arg base)_$(arg stacks)_$(arg 3d_sensor).urdf.xacro'" name="urdf_file"/>
+  <param command="$(arg urdf_file)" name="robot_description"/>
 
-  <!-- launch our robots -->
-  <include file="$(find experiment_launcher)/launch/multi_robot_launch/robots.launch">
-    <arg name="base" value="$(arg base)"/>
-    <arg name="stacks" value="$(arg stacks)"/>
-    <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
-  </include>
+  <!-- Run Robot 1 -->
+  <group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf"/>
+    <include file="$(find experiment_launcher)/launch/includes/single_turtlebot.launch">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="init_pose" value="-x 1 -y 1 -z 0"/>
+      <arg name="robot_name" value="Robot1"/>
+    </include>
+  </group>
+
+  <!-- Run Robot 2 -->
+  <group ns="robot2">
+    <param name="tf_prefix" value="robot2_tf"/>
+    <include file="$(find experiment_launcher)/launch/includes/single_turtlebot.launch">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="init_pose" value="-x -1 -y 1 -z 0"/>
+      <arg name="robot_name" value="Robot2"/>
+    </include>
+  </group>
+
 </launch>
