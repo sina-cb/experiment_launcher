@@ -9,7 +9,6 @@ TrajectoryPlannerROS:
   min_rotational_vel: -0.7
   min_in_place_rotational_vel: 0.7
 
-
   holonomic_robot: false
   yaw_goal_tolerance: 0.3
   xy_goal_tolerance: 0.3
