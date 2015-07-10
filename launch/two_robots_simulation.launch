@@ -28,11 +28,12 @@
       <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
       <arg name="init_pose" value="-x 1 -y 1 -z 0"/>
       <arg name="robot_name" value="Robot1"/>
+      <arg name="camera_depth_frame" value="/robot1_tf/camera_depth_frame"/>
     </include>
   </group>
 
   <!-- Run Robot 2 -->
-  <!-- <group ns="robot2">
+  <group ns="robot2">
     <param name="tf_prefix" value="robot2_tf"/>
     <include file="$(find experiment_launcher)/launch/includes/single_turtlebot.launch">
       <arg name="base" value="$(arg base)"/>
@@ -40,7 +41,8 @@
       <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
       <arg name="init_pose" value="-x -1 -y 1 -z 0"/>
       <arg name="robot_name" value="Robot2"/>
+      <arg name="camera_depth_frame" value="/robot2_tf/camera_depth_frame"/>
     </include>
-  </group> -->
+  </group>
 
 </launch>
