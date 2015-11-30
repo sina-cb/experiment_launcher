@@ -1,0 +1,5 @@
+[colors]
+(0  128 0) 0.000000 1 Green_Cylinder
+
+[thresholds]
+(75:140, 48:85, 27:74)

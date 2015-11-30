@@ -1,0 +1,3 @@
+
+export GAZEBO_MODEL_PATH=/home/sina/indigo_workspace/src/experiment_launcher/models
+export GAZEBO_RESOURCE_PATH=/home/sina/indigo_workspace/src/experiment_launcher/models
