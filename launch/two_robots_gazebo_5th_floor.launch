@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+
+<launch>
+
+  <!-- World definition -->
+  <arg name="world_file" default="$(find experiment_launcher)/worlds/Fifth_Floor.world"/>
+
+  <arg name="base" value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
+  <arg name="battery" value="$(optenv TURTLEBOT_BATTERY /proc/acpi/battery/BAT0)"/>
+  <arg name="stacks" value="$(optenv TURTLEBOT_STACKS hexagons)"/> <!-- circles, hexagons -->
+  <arg name="3d_sensor" value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/> <!-- kinect, asus_xtion_pro -->
+
+  <!-- roslaunch arguments -->
+  <arg name="debug" default="false"/>
+  <arg name="gui" default="true"/>
+
+  <!-- Start the world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_file)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="headless" value="false"/>
+  </include>
+
+  <!-- Find robot description -->
+  <arg default="$(find xacro)/xacro.py '$(find turtlebot_description)/robots/$(arg base)_$(arg stacks)_$(arg 3d_sensor).urdf.xacro'" name="urdf_file"/>
+  <param command="$(arg urdf_file)" name="robot_description"/>
+
+  <!-- Run Robot 1 -->
+  <group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf"/>
+    <include file="$(find experiment_launcher)/launch/includes/single_turtlebot.launch">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="init_pose" value="-x 3 -y -1 -z 0 -R 0 -P 0 -Y 3.13"/>
+      <arg name="robot_name" value="Robot1"/>
+      <arg name="camera_depth_frame" value="/robot1_tf/camera_depth_frame"/>
+    </include>
+  </group>
+
+  <!-- Run Robot 2 -->
+  <group ns="robot2">
+    <param name="tf_prefix" value="robot2_tf"/>
+    <include file="$(find experiment_launcher)/launch/includes/single_turtlebot.launch">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="init_pose" value="-x 2 -y -1 -z 0 -R 0 -P 0 -Y 3.13"/>
+      <arg name="robot_name" value="Robot2"/>
+      <arg name="camera_depth_frame" value="/robot2_tf/camera_depth_frame"/>
+    </include>
+  </group>
+
+</launch>

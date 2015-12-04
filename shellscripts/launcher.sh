@@ -55,3 +55,66 @@ while [[ -z "$cmvisionProc" ]]; do
 		echo "Had to force kill cmvision xterm...restarting it"
 	fi
 done
+
+
+# Script for guaranteed safe start of amcl and nested_amcl
+amclXterm=
+amclProc=
+nestedAmclProc=
+
+while :; do 
+	
+	xterm -e "roslaunch experiment_launcher amcl_multiple_robots.launch" &
+	amclXterm=$!
+	# echo "amclXterm="$amclXterm
+
+	sleep 25s
+
+	amclProc=$(pidof amcl)
+	# echo "amclProc="$amclProc
+	nestedAmclProc=$(pidof nested_amcl)
+	# echo "nestedAmclProc="$nestedAmclProc
+
+	if test -z "$amclProc"; then
+		kill $amclXterm
+		sleep 5s
+		kill -9 $amclXterm
+		sleep 5s
+		echo "Had to force kill amcl xterm...restarting it"
+
+	elif test -z "$nestedAmclProc"; then
+		kill $amclXterm
+		sleep 5s
+		kill -9 $amclXterm
+		sleep 5s
+		echo "Had to force kill nested_amcl xterm...restarting it"
+
+	else
+		break
+
+	fi
+done
+
+# Script for guaranteed safe start of rviz
+rvizXterm=
+rvizProc=
+
+while [[ -z "$rvizProc" ]]; do 
+	
+	xterm -e "roslaunch experiment_launcher multi_nested_rviz.launch" &
+	rvizXterm=$!
+	# echo "rvizXterm="$rvizXterm
+
+	sleep 15s
+
+	rvizProc=$(pidof rviz)
+	# echo "rvizProc="$rvizProc
+
+	if test -z "$rvizProc"; then
+		kill $rvizXterm
+		sleep 5s
+		kill -9 $rvizXterm
+		sleep 5s
+		echo "Had to force kill rviz xterm...restarting it"
+	fi
+done
