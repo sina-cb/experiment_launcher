@@ -16,7 +16,7 @@
  <group ns="robot1">
   <param name="tf_prefix" value="robot1_tf"/>
   <node name="cmvision" pkg="cmvision" type="cmvision" respawn="false"> <!-- launch-prefix="xterm -e gdb "> -->
-    <remap from="image" to="/camera/rgb/image_raw"/>
+    <remap from="image" to="/robot1/camera/rgb/image_raw"/>
     
     <remap from="/cmvision/color_file" to="/robot1/cmvision/color_file"/>
     <remap from="/cmvision/mean_shift_on" to="/robot1/cmvision/mean_shift_on"/>
@@ -24,7 +24,7 @@
     <remap from="/cmvision/spatial_radius_pix" to="/robot1/cmvision/spatial_radius_pix"/>
     <remap from="/cmvision/debug_on" to="/robot1/cmvision/debug_on"/>
 
-    <param name="color_file" value="$(find experiment_launcher)/launch/blob_detection/colors-green_cylinder-2.txt" />
+    <param name="color_file" value="$(find experiment_launcher)/launch/blob_detection/box_green.txt" />
     <param name="mean_shift_on" value="false" />
     <param name="color_radius_pix" value="0" />
     <param name="spatial_radius_pix" value="0" />

@@ -56,9 +56,9 @@
     <param name="min_nested_particles" value="1"/>
     <param name="max_nested_particles" value="10"/>
 
-    <param name="initial_cov_xx" value="25" />
-    <param name="initial_cov_yy" value="25" />
-    <param name="initial_cov_aa" value="0.1" /> <!-- default is PI/12 * PI/12 -->
+    <param name="initial_cov_xx" value="0.5 * 0.5" /> <!-- Based on Kedar's 25 -->
+    <param name="initial_cov_yy" value="0.5 * 0.5" /> <!-- Based on Kadar's 25 -->
+    <param name="initial_cov_aa" value="PI/12 * PI/12" /> <!-- Based on Kedar's 0.1 -->
 
     <param name="robot_start_config_id" value="A" />
     <param name="trajectory_id" value="T1" />
