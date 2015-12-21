@@ -50,4 +50,7 @@
     <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
   </group>
 
+  <include file="$(find experiment_launcher)/launch/ground_truth_publisher.launch">
+  </include>
+
 </launch>
