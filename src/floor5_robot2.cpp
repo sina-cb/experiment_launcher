@@ -23,20 +23,20 @@ floor5_robot2::floor5_robot2()
     y=0;
 
 
-    waypoint1.position.x = 3.0;
-    waypoint1.position.y = 17.3;
+    waypoint1.position.x = 0.61;
+    waypoint1.position.y = 0.01;
 
-    waypoint2.position.x = -4.0;
-    waypoint2.position.y = 17.3;
+    waypoint2.position.x = 0.6;
+    waypoint2.position.y = 1.10;
 
-    waypoint3.position.x = -5.8;
-    waypoint3.position.y = 15;
+    waypoint3.position.x = 0.60;
+    waypoint3.position.y = 10.93;
 
-    waypoint4.position.x = -5.8;
-    waypoint4.position.y = 7;
+    waypoint4.position.x = 1.13;
+    waypoint4.position.y = 12.32;
 
-    robot2_final_goal.position.x = -7;
-    robot2_final_goal.position.y = 5;
+    robot2_final_goal.position.x = 2.62;
+    robot2_final_goal.position.y = 12.38;
 
     seeking_waypoint_1 = true;
     seeking_waypoint_2 = false;

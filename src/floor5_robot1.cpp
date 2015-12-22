@@ -33,15 +33,13 @@ Floor5_Robot1::Floor5_Robot1()
     ros::NodeHandle n;
 
     //for comanding the base
-    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel", 1);
+    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel_mux/input/teleop", 1);
 
     //ros::Subscriber action_sub = n.subscribe("cmd_vel", 100, cmd_vel_Callback);
 
     laser_sub = n.subscribe("/robot1/scan", 1, &Floor5_Robot1::laser_Callback,this);
 
     goal_status_sub = n.subscribe("/robot1/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
-
-
 
 
     color_blob_sub = n.subscribe("/robot1/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
@@ -65,12 +63,12 @@ Floor5_Robot1::Floor5_Robot1()
     y=0;
 
 
-    waypoint1.position.x = 5.5;
-    waypoint1.position.y = 18;
+    waypoint1.position.x = 0.73;
+    waypoint1.position.y = -0.41;
 
-    final_goal.position.x = -5;
-    final_goal.position.y = 1;
-
+    final_goal.position.x = 0.49;
+    final_goal.position.y = 10.36;
+    
     publish_goal_flag = true;
 
     seeking_waypoint_1 = true;
@@ -420,7 +418,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
         }
 
         else{
-
             bool use_move_base = false;
 
             //ROS_INFO("leader distance, theta: %f \t %f",leader_distance, leader_theta);
@@ -518,7 +515,8 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             //last_seen_theta = 0.0;
 
             if(!use_move_base){
-                vel_pub_.publish(cmd_vel_);
+            	if (!isnan(leader_distance))
+                	vel_pub_.publish(cmd_vel_);
             }
             /*
             else{
@@ -542,7 +540,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             }
             */
 
-            ROS_DEBUG("distance, speed: %f | %f ", leader_distance, cmd_vel_.linear.x);
+            ROS_INFO("distance, speed: %f | %f ", leader_distance, cmd_vel_.linear.x);
 
             //}
 

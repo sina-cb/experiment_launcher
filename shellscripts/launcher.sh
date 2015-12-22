@@ -124,27 +124,27 @@ done
 behaveXterm=
 behaveProc=
 
-while [ -z "$behaveProc" ]; do 
+# while [ -z "$behaveProc" ]; do 
 	
-	xterm -e "roslaunch turtlebot_behaviour multi_robot_behaviour.launch" &
-	behaveXterm=$!
-	# echo "behaveXterm="$behaveXterm
+# 	xterm -e "roslaunch turtlebot_behaviour multi_robot_behaviour.launch" &
+# 	behaveXterm=$!
+# 	# echo "behaveXterm="$behaveXterm
 
-	sleep 5s
+# 	sleep 5s
 
-	behaveProc=$(pidof behave | wc -w)
-	# echo "behaveProc="$behaveProc
+# 	behaveProc=$(pidof behave | wc -w)
+# 	# echo "behaveProc="$behaveProc
 
-	if test "$behaveProc" -lt "2"; then
-		kill $behaveXterm
-		sleep 5s
-		kill -9 $behaveXterm
-		sleep 5s
-		echo "Had to force kill behave xterm...restarting it"
-		behaveProc=
+# 	if test "$behaveProc" -lt "2"; then
+# 		kill $behaveXterm
+# 		sleep 5s
+# 		kill -9 $behaveXterm
+# 		sleep 5s
+# 		echo "Had to force kill behave xterm...restarting it"
+# 		behaveProc=
 
-	fi
-done
+# 	fi
+# done
 
 # Script for guaranteed safe start of floor5_robot2
 floor5_robot2Xterm=
