@@ -10,7 +10,7 @@
   <arg name="base_frame_id"   default="base_footprint"/>
   <arg name="global_frame_id" default="/map"/>
 
-  <node pkg="nested_amcl" type="nested_amcl" name="nested_amcl" launch-prefix="xterm -hold -e" > <!-- xterm -hold -e gdb - -args -->
+  <node pkg="nested_amcl" type="nested_amcl" name="nested_amcl" launch-prefix="xterm -hold -e" > <!-- xterm -hold -e gdb -args -->
     <param name="use_map_topic"             value="$(arg use_map_topic)"/>
     <!-- Publish scans from best pose at a max of 10 Hz -->
     <param name="odom_model_type"           value="diff"/>
