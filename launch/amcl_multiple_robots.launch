@@ -17,10 +17,19 @@
     <arg name="nested_amcl/initial_pose_y" value="-1.01" />
     <arg name="nested_amcl/initial_pose_a" value="3.11" />
 
+    <!-- SINA -->
+    <arg name="nested_amcl/initial_leader_pose_x" value="0.62" />
+    <arg name="nested_amcl/initial_leader_pose_y" value="-0.7" />
+    <arg name="nested_amcl/initial_leader_pose_a" value="1.58" />
+
     <include file="$(find experiment_launcher)/launch/includes/nested_amcl_one_robot.launch">
       <arg name="initial_pose_x" value="$(arg nested_amcl/initial_pose_x)"/>
       <arg name="initial_pose_y" value="$(arg nested_amcl/initial_pose_y)"/>
       <arg name="initial_pose_a" value="$(arg nested_amcl/initial_pose_a)"/>
+      <!-- SINA -->
+      <arg name="initial_leader_pose_x" value="$(arg nested_amcl/initial_leader_pose_x)"/>
+      <arg name="initial_leader_pose_y" value="$(arg nested_amcl/initial_leader_pose_y)"/>
+      <arg name="initial_leader_pose_a" value="$(arg nested_amcl/initial_leader_pose_a)"/>
       <arg name="odom_frame_id" value="/robot1_tf/odom"/>
       <arg name="base_frame_id" value="/robot1_tf/base_footprint"/>
       <arg name="global_frame_id" value="/map"/>
@@ -34,7 +43,7 @@
   <group ns="robot2">
     <arg name="tf_prefix" value="robot2_tf" />
     <arg name="amcl/initial_pose_x" value="0.62" />
-    <arg name="amcl/initial_pose_y" value="0.01" />
+    <arg name="amcl/initial_pose_y" value="-0.7" />
     <arg name="amcl/initial_pose_a" value="1.58" />
 
     <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
