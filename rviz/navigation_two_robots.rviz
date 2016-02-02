@@ -456,6 +456,13 @@ Visualization Manager:
             robot1: true
           Queue Size: 100
           Value: true
+        - Class: rviz/Axes
+          Enabled: true
+          Length: 0.3
+          Name: Leader Pose Estimation
+          Radius: 0.1
+          Reference Frame: nested_odom
+          Value: true
       Enabled: true
       Name: Robot 1
     - Class: rviz/Group
@@ -706,11 +713,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 133.663
+      Scale: 266.185
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 3.33244
-      Y: 0.790025
+      X: 1.10061
+      Y: 1.08377
     Saved: ~
 Window Geometry:
   Displays:

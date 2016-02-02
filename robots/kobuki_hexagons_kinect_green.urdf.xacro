@@ -8,10 +8,16 @@
 
   <xacro:include filename="$(find turtlebot_description)/urdf/turtlebot_library.urdf.xacro" />
   <xacro:include filename="$(find experiment_launcher)/robots/boxes/box_green.urdf.xacro" />
+  <xacro:include filename="$(find experiment_launcher)/robots/boxes/box_right.urdf.xacro" />
+  <xacro:include filename="$(find experiment_launcher)/robots/boxes/box_left.urdf.xacro" />
+  <xacro:include filename="$(find experiment_launcher)/robots/boxes/box_back.urdf.xacro" />
   
   <kobuki/>
   <stack_hexagons parent="base_link"/>
   <sensor_kinect  parent="base_link"/>
   <box_green	  parent="base_link"/>
+  <box_right	  parent="base_link"/>
+  <box_left 	  parent="base_link"/>
+  <box_back 	  parent="base_link"/>
 
 </robot>

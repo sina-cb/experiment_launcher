@@ -1,7 +1,5 @@
 #include "floor5_robot1.h"
 
-
-
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
 //This is = (57/640)*(M_PI/180)
@@ -16,7 +14,7 @@
 
 #define MIN_DISTANCE 0.5
 #define MAX_DISTANCE 10.0
-#define MAX_SPEED 1.0
+#define MAX_SPEED 0.3
 
 #define FINAL_STAGE_KICKOFF_X 0
 #define FINAL_STAGE_KICKOFF_Y 6
