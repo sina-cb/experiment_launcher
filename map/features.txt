@@ -5,12 +5,15 @@ Header:
 	EXTRA_INFORMATION
 
 Features:
+
 CrossWalk	0.62	6.18	NULL
 //CrossWalk	20	20	NULL
 
+// INFO: LEFT == 0  RIGHT == 1
 //TurnPoint	30	30	LEFT
 TurnPoint	0.77	-1.01	RIGHT
 
+// INFO: THREE == 3 FOUR  == 4
 Junction	0.57	12.42	THREE
 //Junction	60	60	FOUR
 
