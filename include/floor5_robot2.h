@@ -9,7 +9,8 @@
 #include <cmvision/Blobs.h>
 #include <tf/tf.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
-
+#include <vector>
+using namespace std;
 
 class floor5_robot2
 {
@@ -32,12 +33,13 @@ public:
 
     tf::Quaternion quat;
 
-    geometry_msgs::Pose waypoint1, waypoint2, waypoint3, waypoint4, robot2_final_goal;
+    vector<geometry_msgs::Pose> waypoints;
+    size_t counter;
 
     int robot2_goalStatus;
     std::string robot2_status_goal_id;
 
-    bool seeking_waypoint_1, seeking_waypoint_2, seeking_waypoint_3, seeking_waypoint_4, robot2_seeking_final_goal, loaded_waypoint_1, loaded_waypoint_2, loaded_waypoint_3, loaded_waypoint_4, robot2_loaded_final_goal, publish_goal_flag;
+    bool seeking_waypoint, loaded_waypoint, publish_goal_flag;
 
 
 

@@ -12,9 +12,10 @@
 // This is = (28.5 * M_PI)/180
 #define COLOR_MAX_ANGLE  0.497418837
 
-#define MIN_DISTANCE 0.5
+#define MIN_DISTANCE 0.8
 #define MAX_DISTANCE 10.0
-#define MAX_SPEED 0.3
+#define MAX_SPEED 0.4
+#define SPEED_OFFSET 0.35
 
 #define FINAL_STAGE_KICKOFF_X 0
 #define FINAL_STAGE_KICKOFF_Y 6
@@ -27,39 +28,25 @@ namespace floor5_robot1{
 
 Floor5_Robot1::Floor5_Robot1()
 {
-
     ros::NodeHandle n;
 
-    //for comanding the base
-    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel_mux/input/teleop", 1);
-
-    //ros::Subscriber action_sub = n.subscribe("cmd_vel", 100, cmd_vel_Callback);
-
+    // Subscribers
     laser_sub = n.subscribe("/robot1/scan", 1, &Floor5_Robot1::laser_Callback,this);
-
     goal_status_sub = n.subscribe("/robot1/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
-
-
     color_blob_sub = n.subscribe("/robot1/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
-
     amcl_sub = n.subscribe("/robot1/amcl_pose", 1, &Floor5_Robot1::amcl_Callback, this);
 
-
-
+    // Publishers
+    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel_mux/input/teleop", 1);
     goal_pub1_ = n.advertise<geometry_msgs::PoseStamped>("/robot1/move_base_simple/goal", 1);
-
     cancel_goal_pub_ = n.advertise<actionlib_msgs::GoalID>("/robot1/move_base/cancel", 1);
-
     robot1_exp_state_pub_ = n.advertise<std_msgs::String>("/robot1_experiment_state", 1);
-
-
 
     fixed_frame = std::string("/map");
 
-    theta = -M_PI/2;
-    x=0;
-    y=0;
-
+    theta   = -M_PI/2;
+    x       = 0;
+    y       = 0;
 
     waypoint1.position.x = 0.73;
     waypoint1.position.y = -0.41;
@@ -82,8 +69,6 @@ Floor5_Robot1::Floor5_Robot1()
     reached_waypoint_1 = false;
     reached_current_goal = false;
 
-
-
     color_centroid_x = -99;
     color_centroid_y = -99;
     leader_distance = 0.0;
@@ -97,10 +82,7 @@ Floor5_Robot1::Floor5_Robot1()
 
     my_pose_x = 0.0;
     my_pose_y = 0.0;
-
-
 }
-
 
 void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
 
@@ -154,21 +136,14 @@ void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayCo
             }
         }
 
-
-
         quat.setRPY(0.0, 0.0, theta);
         tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
         tf::poseStampedTFToMsg(p1, goal1);
-
-
-
 
         if(publish_goal_flag){
             goal_pub1_.publish(goal1);
             publish_goal_flag = false;
         }
-
-
 
         if(robot1_goalStatus == 1){
             publish_goal_flag = false;
@@ -209,13 +184,11 @@ void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayCo
                 state_msg.data = state_stream.str();
                 robot1_exp_state_pub_.publish(state_msg);
 
-//                seeking_final_goal = false;
+                //                seeking_final_goal = false;
 
-//                ros::shutdown();
+                //                ros::shutdown();
             }
         }
-
-
 
         if(robot1_goalStatus == 5
                 || robot1_goalStatus == 9){
@@ -235,7 +208,7 @@ void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayCo
                     state_msg.data = state_stream.str();
                     robot1_exp_state_pub_.publish(state_msg);
 
-//                    ros::shutdown();
+                    //                    ros::shutdown();
                 }
             }
             else if(seeking_final_goal){
@@ -245,15 +218,12 @@ void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayCo
                 state_msg.data = state_stream.str();
                 robot1_exp_state_pub_.publish(state_msg);
 
-//                ros::shutdown();
+                //                ros::shutdown();
             }
         }
     }
 
 }
-
-
-
 
 void Floor5_Robot1::color_blob_Callback(const cmvision::BlobsConstPtr &Blobs){
     cmvision::Blobs Blobs_ = *Blobs;
@@ -281,16 +251,6 @@ void Floor5_Robot1::color_blob_Callback(const cmvision::BlobsConstPtr &Blobs){
             //Contiguous landmark assumption
             color_centroid_x = color_centroid_x + temp_blob.x;
             color_centroid_y = color_centroid_y + temp_blob.y;
-
-/*
-            //Discontiguous landmark assumption
-            if(temp_blob.area > blob_area){
-                blob_area = temp_blob.area;
-                color_centroid_x = temp_blob.x;
-                color_centroid_y = temp_blob.y;
-                biggest_blob = i;
-            }
-*/
         }
 
         color_centroid_x = color_centroid_x/Blobs_.blob_count;
@@ -305,20 +265,10 @@ void Floor5_Robot1::color_blob_Callback(const cmvision::BlobsConstPtr &Blobs){
         color_seen_time = tp.tv_sec; //get current timestamp in seconds
 
     }
-    //ROS_INFO("colored blob centroid x,y: %d, %d \t leader_theta: %0.3f", color_centroid_x, color_centroid_y, leader_theta);
-
-
-
 
 }
 
-
-
 void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
-
-
-
-    //bool recovery_flag = false;
 
     max_beams = laser_scan->ranges.size();
 
@@ -346,13 +296,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
         robot1_exp_state_pub_.publish(state_msg);
     }
 
-
-
-
-    //    double beam_sum = 0;
-
-    //ROS_INFO("%d", max_beams);
-
     if(color_centroid_x >= 0.0){
 
         for(int beam_no = 0 ; beam_no < max_beams ; beam_no++){
@@ -366,11 +309,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 min_measured_range = current_range;
             }
 
-
-            //        beam_sum += laser_scan->ranges[beam_no];
-            //        if(laser_scan->ranges[beam_no] < (laser_scan->range_min + 0.5)){
-            //            recovery_flag = true;
-            //        }
             if( ( (laser_scan->angle_min + (beam_no * laser_scan->angle_increment)) >= leader_theta)
                     && !got_leader_distance){
 
@@ -382,9 +320,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
                 got_leader_distance = true;
             }
-
         }
-
     }
 
     if(seeking_waypoint_1
@@ -399,9 +335,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
     }
 
-
     if(!seeking_final_goal && following_stage){
-
 
         if( (current_timestamp - color_seen_time) > 60){ // not seen leader for more than 60 seconds
 
@@ -426,15 +360,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
             if(min_measured_range <= MIN_DISTANCE
                     || leader_distance <= MIN_DISTANCE){
-                /*
-                //                if(leader_distance < (MIN_DISTANCE + 1.0)){
-                //                    cmd_vel_.linear.x = 0.0;
-                //                    cmd_vel_.linear.y = 0.0;
-                //                    cmd_vel_.linear.z = 0.0;
-                //                }
-                //                else{
-
-*/
                 if(leader_distance > 0){
                     cmd_vel_.linear.x = 0.0;
                     cmd_vel_.linear.y = 0.0;
@@ -454,28 +379,10 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                     cmd_vel_.angular.y = 0.0;
                     cmd_vel_.angular.z = 2*last_seen_theta;
                 }
-
-                //                }
             }
 
             else{
-                /*
-                if(leader_distance < (MIN_DISTANCE + 2.0)){
-                    cmd_vel_.linear.x = 0.6;
-                    cmd_vel_.linear.y = 0.0;
-                    cmd_vel_.linear.z = 0.0;
-                }
-                else{
-
-                    cmd_vel_.linear.x = 1.0;
-                    cmd_vel_.linear.y = 0.0;
-                    cmd_vel_.linear.z = 0.0;
-
-                }
-
-*/
-
-                cmd_vel_.linear.x = leader_distance*(MAX_SPEED/MAX_DISTANCE) + 0.55;
+                cmd_vel_.linear.x = leader_distance * (MAX_SPEED / MAX_DISTANCE) + SPEED_OFFSET;
                 cmd_vel_.linear.y = 0.0;
                 cmd_vel_.linear.z = 0.0;
 
@@ -485,70 +392,16 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 cmd_vel_.angular.z = last_seen_theta* std::max(1/cmd_vel_.linear.x , 1.0);
             }
 
-            /*
-
-            if( color_centroid_x > IMAGE_WIDTH/3
-                    && color_centroid_x < (2*IMAGE_WIDTH/3) ){
-
-                cmd_vel_.angular.x = 0.0;
-                cmd_vel_.angular.y = 0.0;
-                cmd_vel_.angular.z = 0.0;
-            }
-            else{
-                if(color_centroid_x <= IMAGE_WIDTH/3){
-                    cmd_vel_.angular.x = 0.0;
-                    cmd_vel_.angular.y = 0.0;
-                    cmd_vel_.angular.z = 0.5;
-                }
-                else{
-                    cmd_vel_.angular.x = 0.0;
-                    cmd_vel_.angular.y = 0.0;
-                    cmd_vel_.angular.z = -0.5;
-                }
-            }
-
-            */
-
-
-            //last_seen_theta = 0.0;
-
             if(!use_move_base){
-            	if (!isnan(leader_distance))
-                	vel_pub_.publish(cmd_vel_);
+                if (!isnan(leader_distance))
+                    vel_pub_.publish(cmd_vel_);
             }
-            /*
-            else{
-                theta = my_pose_theta + leader_theta;
-                x = my_pose_x + cos(theta) * (leader_distance/2);
-                y = my_pose_y + sin(theta) * (leader_distance/2);
-
-                geometry_msgs::PoseStamped follower_goal;
-
-                quat.setRPY(0.0, 0.0, theta);
-                tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
-                tf::poseStampedTFToMsg(p1, follower_goal);
-
-                goal_pub1_.publish(follower_goal);
-
-                use_move_base = false;
-
-                //            ros::Rate loop_rate(0.2);
-
-                //            loop_rate.sleep();
-            }
-            */
 
             ROS_INFO("distance, speed: %f | %f ", leader_distance, cmd_vel_.linear.x);
-
-            //}
-
         }
-
     }
 
 }
-
-
 
 void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose){
 
@@ -562,30 +415,6 @@ void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStamped
     my_pose_x = amcl_pose_.pose.pose.position.x;
     my_pose_y = amcl_pose_.pose.pose.position.y;
     my_pose_theta = amcl_pose_.pose.pose.orientation.z;
-
-    //    ROS_INFO("amcl_pose (x, y, theta): (%f, %f, %f)", my_pose_x, my_pose_y, my_pose_theta);
-
-    /*
-    double angle = 0.0;
-
-    if(following_stage && leader_distance > 0){
-        angle = my_pose_theta + leader_theta;
-        x = my_pose_x + cos(angle) * (leader_distance/2);
-        y = my_pose_y + sin(angle) * (leader_distance/2);
-
-        geometry_msgs::PoseStamped follower_goal;
-
-        tf::Quaternion temp_quaternion;
-
-        temp_quaternion.setRPY(0.0, 0.0, angle);
-        tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(temp_quaternion, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
-        tf::poseStampedTFToMsg(p1, follower_goal);
-
-        goal_pub1_.publish(follower_goal);
-
-    }
-
-    */
 
     if(!seeking_final_goal
             && my_pose_x < -(FINAL_STAGE_KICKOFF_X)
@@ -618,17 +447,13 @@ void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStamped
 
 }
 
-
-
-}
+} // End of Namespace
 
 int main(int argc, char **argv)
 {
-
     ros::init(argc, argv, "floor5_robot1");
 
     floor5_robot1::Floor5_Robot1 robot1_runner;
-
 
     ros::spin();
 
