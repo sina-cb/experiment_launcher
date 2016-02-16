@@ -23,6 +23,7 @@ public:
 
     void robot2_goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array2);
     void amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
+    void set_move_base_max_vel(double new_vel);
 
     std::string fixed_frame;
     double theta;

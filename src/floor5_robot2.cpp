@@ -1,5 +1,7 @@
 #include "floor5_robot2.h"
-
+#include <dynamic_reconfigure/DoubleParameter.h>
+#include <dynamic_reconfigure/Reconfigure.h>
+#include <dynamic_reconfigure/Config.h>
 
 #define DELTA_LINEAR 0.5
 #define DELTA_ANGULAR 0.52 //30 degrees
@@ -20,29 +22,59 @@ floor5_robot2::floor5_robot2()
     y=0;
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.61;
-    waypoint->position.y = 0.01;
+    waypoint->position.x = 0.60;
+    waypoint->position.y = 1.0;
     waypoints.push_back(*waypoint);
 
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 0.60;
-    waypoint->position.y = 10.93;
+    waypoint->position.y = 2.0;
     waypoints.push_back(*waypoint);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 1.13;
-    waypoint->position.y = 13.32;
+    waypoint->position.x = 0.60;
+    waypoint->position.y = 3.0;
     waypoints.push_back(*waypoint);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 2.13;
-    waypoint->position.y = 13.32;
+    waypoint->position.x = 0.60;
+    waypoint->position.y = 4.0;
     waypoints.push_back(*waypoint);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 5.13;
-    waypoint->position.y = 13.32;
+    waypoint->position.x = 0.60;
+    waypoint->position.y = 5.0;
     waypoints.push_back(*waypoint);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 0.60;
+    waypoint->position.y = 6.0;
+    waypoints.push_back(*waypoint);
+
+//    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 0.61;
+//    waypoint->position.y = 0.01;
+//    waypoints.push_back(*waypoint);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 0.60;
+//    waypoint->position.y = 10.93;
+//    waypoints.push_back(*waypoint);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 1.13;
+//    waypoint->position.y = 13.32;
+//    waypoints.push_back(*waypoint);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 2.13;
+//    waypoint->position.y = 13.32;
+//    waypoints.push_back(*waypoint);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 5.13;
+//    waypoint->position.y = 13.32;
+//    waypoints.push_back(*waypoint);
 
     counter = 0;
 
@@ -112,6 +144,14 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
         seeking_waypoint = false;
         loaded_waypoint  = false;
 
+        if (counter % 2 == 0){
+            ROS_INFO("Reduce Speed!!!");
+            set_move_base_max_vel(0.2);
+        }else{
+            ROS_INFO("Increase Speed!!!");
+            set_move_base_max_vel(0.4);
+        }
+
         counter++;
         if (counter >= waypoints.size()){
             ROS_INFO("Reached the final goal!");
@@ -122,6 +162,30 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
 
 }
 
+void floor5_robot2::set_move_base_max_vel(double new_vel){
+
+    dynamic_reconfigure::ReconfigureRequest srv_req;
+    dynamic_reconfigure::ReconfigureResponse srv_resp;
+    dynamic_reconfigure::DoubleParameter double_param;
+    dynamic_reconfigure::Config conf;
+
+    double_param.name = "max_trans_vel";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
+    double_param.name = "max_vel_x";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
+//    double_param.name = "kurtana_roll_joint";
+//    double_param.value = yaw;
+//    conf.doubles.push_back(double_param);
+
+    srv_req.config = conf;
+
+    ros::service::call("/robot2/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
+
+}
 
 void floor5_robot2::amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose){
 
