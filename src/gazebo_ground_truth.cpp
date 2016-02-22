@@ -2,6 +2,7 @@
 #include "gazebo_msgs/ModelStates.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Point.h"
+#include "tf/tf.h"
 #include <visualization_msgs/Marker.h>
 #include <string>
 
@@ -37,13 +38,19 @@ void chatterCallback(const gazebo_msgs::ModelStates::ConstPtr& msg){
   			points.color.b = b[i];
   			points.color.a = 1.0f;
 
-  			points.pose.orientation.w = 1.0;
+            points.pose.position.x = .15;
+            points.pose.position.y = .25;
 
-  			points.pose.position.x = .1;
-  			points.pose.position.y = .2;
+            tf::Quaternion a;
+//            a.setRPY(0, 0, -0.15);
+            a.setRPY(0, 0, 0);
+            points.pose.orientation.x = a.getX();
+            points.pose.orientation.y = a.getY();
+            points.pose.orientation.z = a.getZ();
+            points.pose.orientation.w = a.getW();
 
   			geometry_msgs::Point p;
-        	p.x = msg->pose[i].position.x;
+            p.x = msg->pose[i].position.x;
         	p.y = msg->pose[i].position.y;
 			p.z = msg->pose[i].position.z;
 
@@ -52,7 +59,6 @@ void chatterCallback(const gazebo_msgs::ModelStates::ConstPtr& msg){
 			marker_pub.publish(points);
 		}
 	}
-	//ROS_ERROR("Kiiir %f", msg->pose[0].position.x);
 }
 
 int main(int argc, char **argv){
