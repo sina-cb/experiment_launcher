@@ -223,9 +223,17 @@ void Floor5_Robot1::set_move_base_max_vel(double new_vel){
     double_param.value = new_vel;
     conf.doubles.push_back(double_param);
 
-//    double_param.name = "kurtana_roll_joint";
-//    double_param.value = yaw;
-//    conf.doubles.push_back(double_param);
+    double_param.name = "min_vel_x";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
+    double_param.name = "min_trans_vel";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
+    //    double_param.name = "kurtana_roll_joint";
+    //    double_param.value = yaw;
+    //    conf.doubles.push_back(double_param);
 
     srv_req.config = conf;
 
@@ -301,17 +309,32 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
     if(following_stage){
 
-        int max_lost_time = 2;
+        int max_lost_time = 1;
         if( (current_timestamp - color_seen_time) > max_lost_time){ // not seen leader for more than 60 seconds
             ROS_INFO("----Lost sight of the leader for %d second, we're using the last known nested_particle_pose and go towards it----", max_lost_time);
 
-            leader_distance = std::sqrt(std::pow(leader_pose_x - my_pose_x, 2) + std::pow(leader_pose_y - my_pose_y, 2));
-            double temp_theta = std::asin((leader_pose_y - my_pose_y) / leader_distance);
-            last_seen_theta = my_pose_theta - temp_theta;
+//            leader_distance = std::sqrt(std::pow(leader_pose_x - my_pose_x, 2) + std::pow(leader_pose_y - my_pose_y, 2));
+//            double temp_theta = std::asin((leader_pose_y - my_pose_y) / leader_distance);
+//            last_seen_theta = -1 * (my_pose_theta - temp_theta);
 
-            ROS_WARN("Last seen theta = %f", last_seen_theta);
-            ROS_WARN("Temp Theta = %f", temp_theta);
-            ROS_WARN("Leader Distance = %f", leader_distance);
+            double angle_correction = std::asin((leader_pose_x - my_pose_x) / std::sqrt(std::pow(leader_pose_x - my_pose_x, 2)
+                                                                                        + std::pow(leader_pose_y - my_pose_y, 2)));
+
+            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+            waypoint->position.x = leader_pose_x;
+            waypoint->position.y = leader_pose_y;
+            quat.setRPY(0, 0, (leader_theta + angle_correction));
+            waypoint->orientation.w = quat.getW();
+            waypoint->orientation.x = quat.getX();
+            waypoint->orientation.y = quat.getY();
+            waypoint->orientation.z = quat.getZ();
+            waypoints.push_back(*waypoint);
+
+            seeking_waypoint = false;
+            loaded_waypoint  = false;
+            following_stage = false;
+
+            set_move_base_max_vel(0.55);
 
             std::stringstream state_stream;
             std_msgs::String state_msg;
@@ -326,7 +349,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             if(min_measured_range <= MIN_DISTANCE
                     || leader_distance <= MIN_DISTANCE){
                 if(leader_distance > 0){
-                    cmd_vel_.linear.x = 0.0;
+                    cmd_vel_.linear.x = 0.05;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -336,7 +359,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 }
 
                 else{
-                    cmd_vel_.linear.x = 0.0;
+                    cmd_vel_.linear.x = 0.05;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -358,8 +381,12 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             }
 
             if(!use_move_base){
-                if (!std::isnan(leader_distance))
+                if (!std::isnan(leader_distance)){
                     vel_pub_.publish(cmd_vel_);
+                }else{
+                    cmd_vel_.linear.x = 0.05;
+                    cmd_vel_.angular.z = last_seen_theta * std::max(1 / cmd_vel_.linear.x , 1.0);
+                }
             }
 
             ROS_INFO("distance, speed: %f | %f ", leader_distance, cmd_vel_.linear.x);

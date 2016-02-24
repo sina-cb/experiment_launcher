@@ -45,8 +45,8 @@ floor5_robot2::floor5_robot2()
     velocities.push_back(0.4);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.93;
-    waypoint->position.y = 11.85;
+    waypoint->position.x = 0.83;
+    waypoint->position.y = 12.20;
     quat.setRPY(0, 0, 1.30);
     waypoint->orientation.w = quat.getW();
     waypoint->orientation.x = quat.getX();
