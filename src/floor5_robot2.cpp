@@ -17,39 +17,65 @@ floor5_robot2::floor5_robot2()
 
     fixed_frame = std::string("/map");
 
-    theta = -M_PI/2;
-    x=0;
-    y=0;
+    x = 0;
+    y = 0;
+
+    set_move_base_max_vel(0.4);
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 1.0;
+    waypoint->position.x = 0.64;
+    waypoint->position.y = 4.66;
+    quat.setRPY(0, 0, M_PI / 2);
+    waypoint->orientation.w = quat.getW();
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
     waypoints.push_back(*waypoint);
+    velocities.push_back(0.2);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 2.0;
+    waypoint->position.x = 0.58;
+    waypoint->position.y = 6.46;
+    quat.setRPY(0, 0, M_PI / 2);
+    waypoint->orientation.w = quat.getW();
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
     waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 3.0;
+    waypoint->position.x = 0.93;
+    waypoint->position.y = 11.85;
+    quat.setRPY(0, 0, 1.30);
+    waypoint->orientation.w = quat.getW();
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
     waypoints.push_back(*waypoint);
+    velocities.push_back(0.2);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 4.0;
+    waypoint->position.x = 1.76;
+    waypoint->position.y = 12.75;
+    quat.setRPY(0, 0, 0.032403);
+    waypoint->orientation.w = quat.getW();
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
     waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 5.0;
+    waypoint->position.x = 9.73;
+    waypoint->position.y = 12.75;
+    quat.setRPY(0, 0, 0.032403);
+    waypoint->orientation.w = quat.getW();
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
     waypoints.push_back(*waypoint);
-
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.60;
-    waypoint->position.y = 6.0;
-    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
 
 //    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
 //    waypoint->position.x = 0.61;
@@ -112,7 +138,11 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
         if(!loaded_waypoint){
             x = waypoints[counter].position.x;
             y = waypoints[counter].position.y;
-            theta = -M_PI;
+
+            quat.setX(waypoints[counter].orientation.x);
+            quat.setY(waypoints[counter].orientation.y);
+            quat.setZ(waypoints[counter].orientation.z);
+            quat.setW(waypoints[counter].orientation.w);
 
             loaded_waypoint = true;
             publish_goal_flag = true;
@@ -120,7 +150,6 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
         }
     }
 
-    quat.setRPY(0.0, 0.0, theta);
     tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
     tf::poseStampedTFToMsg(p1, goal);
 
@@ -144,13 +173,15 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
         seeking_waypoint = false;
         loaded_waypoint  = false;
 
-        if (counter % 2 == 0){
-            ROS_INFO("Reduce Speed!!!");
-            set_move_base_max_vel(0.2);
-        }else{
-            ROS_INFO("Increase Speed!!!");
-            set_move_base_max_vel(0.4);
-        }
+        set_move_base_max_vel(velocities[counter]);
+
+//        if (counter % 2 == 0){
+//            ROS_INFO("Reduce Speed!!!");
+//            set_move_base_max_vel(0.2);
+//        }else{
+//            ROS_INFO("Increase Speed!!!");
+//            set_move_base_max_vel(0.4);
+//        }
 
         counter++;
         if (counter >= waypoints.size()){

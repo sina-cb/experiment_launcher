@@ -313,10 +313,10 @@ Visualization Manager:
         - Arrow Length: 0.2
           Class: rviz/PoseArray
           Color: 0; 192; 0
-          Enabled: true
+          Enabled: false
           Name: AMCL Particles
           Topic: /robot1/particlecloud
-          Value: true
+          Value: false
         - Arrow Length: 0.3
           Class: rviz/PoseArray
           Color: 255; 25; 0

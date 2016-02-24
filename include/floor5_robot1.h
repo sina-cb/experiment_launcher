@@ -14,6 +14,8 @@
 #include <tf/tf.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <math.h>
+#include <vector>
+using namespace std;
 
 namespace floor5_robot1{
 
@@ -26,70 +28,55 @@ public:
     double straight_prob;
     double right_prob;
     double left_prob;
-    bool publish_goal_flag, set_next_goal;
 
-    int robot1_goalStatus, robot2_goalStatus;
     int current_goal;
-
     actionlib_msgs::GoalID current_goal_id;
 
-    std::string
-    status_goal_id,
-    robot2_status_goal_id;
+    std::string status_goal_id, robot1_status_goal_id;
+    int robot1_goalStatus;
 
-    bool loaded_waypoint_1, reached_waypoint_1, reached_current_goal, loaded_final_goal, robot2_loaded_final_goal;
-    bool load_next_goal;
-
-    bool seeking_waypoint_1;
-    int attempting_waypoint1;
+    bool seeking_waypoint, loaded_waypoint, publish_goal_flag;
 
     bool following_stage;
-    bool seeking_final_goal, robot2_seeking_final_goal;
 
     ros::Publisher vel_pub_;
     ros::Publisher goal_pub1_;
-
     ros::Publisher cancel_goal_pub_;
-
     ros::Publisher robot1_exp_state_pub_;
 
     ros::Subscriber laser_sub;
     ros::Subscriber goal_status_sub;
-    ros::Subscriber robot2_goal_status_sub;
-
     ros::Subscriber color_blob_sub;
-
     ros::Subscriber amcl_sub;
-
-    geometry_msgs::Twist cmd_vel_;
-
-
-    geometry_msgs::Pose waypoint1, final_goal;
+    ros::Subscriber nested_amcl_sub;
 
     std::string fixed_frame;
     double theta;
     double x, y;
-    tf::Quaternion quat, quat2;
-
-
-
-    int color_centroid_x, color_centroid_y;
-    double leader_distance, leader_theta , last_seen_theta;
-
-    long int color_seen_time, nested_amcl_publish_timestamp;
-
-    double forward_vel, angular_vel;
-
 
     double my_pose_x, my_pose_y, my_pose_theta;
 
+    double leader_pose_x, leader_pose_y, leader_pose_theta;
+
+    tf::Quaternion quat, quat2;
+
+    geometry_msgs::Twist cmd_vel_;
+    vector<geometry_msgs::Pose> waypoints;
+    size_t counter;
+
+    int color_centroid_x, color_centroid_y;
+    double leader_distance, leader_theta , last_seen_theta;
+    long int color_seen_time, nested_amcl_publish_timestamp;
 
     void laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan);
     void goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr& status_array);
     void color_blob_Callback(const cmvision::BlobsConstPtr& Blobs);
     void amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
+    void nested_amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &nested_amcl_pose);
 
     void robot2_goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr& status_array2);
+    void set_move_base_max_vel(double new_vel);
+
 };
 
 }
