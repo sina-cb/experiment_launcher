@@ -1,0 +1,62 @@
+Header:
+	FEATURE_TYPE
+	X_VALUE
+	Y_VALUE
+	EXTRA_INFORMATION
+
+Features:
+
+CrossWalk	4.61	12.91	NULL
+CrossWalk	10.46	12.91	NULL
+CrossWalk	17.26	12.91	NULL
+CrossWalk	27.46	12.91	NULL
+CrossWalk	21.55	8.10	NULL
+CrossWalk	26.03	4.71	NULL
+CrossWalk	34.80	5.00	NULL
+CrossWalk	29.80	0.63	NULL
+CrossWalk	17.26	-.78	NULL
+CrossWalk	10.46	-.78	NULL
+CrossWalk	4.61	-.78	NULL
+CrossWalk	1.01	6.90	NULL
+
+//CrossWalk	20	20	NULL
+
+// INFO: LEFT == 0  RIGHT == 1
+//TurnPoint	30	30	LEFT
+TurnPoint	1.01	-.78	RIGHT
+TurnPoint	21.70	-.86	RIGHT
+TurnPoint	31.94	9.45	RIGHT
+TurnPoint	33.68	9.70	RIGHT
+TurnPoint	29.79	4.33	RIGHT
+TurnPoint	29.79	-.78	RIGHT
+
+// INFO: THREE == 3 FOUR  == 4
+Junction	1.01	12.91	THREE
+Junction	1.01	6.90	THREE
+Junction	21.53	12.94	THREE
+Junction	21.55	6.70	THREE
+Junction	21.80	4.70	THREE
+Junction	25.32	12.84	FOUR
+Junction	30.0	12.76	FOUR
+Junction	30.0	9.58	FOUR
+Junction	29.79	2.40	THREE
+Junction	29.80	0.63	THREE
+Junction	33.0	12.87	THREE
+Junction	34.56	12.71	FOUR
+Junction	34.72	9.58	THREE
+Junction	34.88	7.76	THREE
+Junction	33.68	8.00	FOUR
+Junction	34.80	6.41	FOUR
+Junction	36.88	6.65	FOUR
+Junction	34.91	4.00	THREE
+Junction	34.91	2.84	THREE
+Junction	34.91	1.37	THREE
+Junction	34.91	-.15	THREE
+Junction	34.91	-2.05	FOUR
+Junction	33.52	-2.19	FOUR
+Junction	37.69	-2.19	FOUR
+Junction	37.69	-.91	FOUR
+Junction	33.35	1.14	THREE
+Junction	31.85	1.18	THREE
+//Junction	60	60	FOUR
+
