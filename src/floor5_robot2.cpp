@@ -23,84 +23,184 @@ floor5_robot2::floor5_robot2()
     set_move_base_max_vel(0.4);
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.64;
-    waypoint->position.y = 4.66;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.w = quat.getW();
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
+    waypoint->position.x = 24.61;
+    waypoint->position.y = 12.44;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.04;
+    waypoint->orientation.w = .99;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 25.97;
+    waypoint->position.y = 11.64;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = 0.0;
+    waypoint->orientation.w = 1.0;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 29.72;
+    waypoint->position.y = 11.62;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = .05;
+    waypoint->orientation.w = .99;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 33.43;
+    waypoint->position.y = 12.46;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.06;
+    waypoint->orientation.w = .99;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 34.43;
+    waypoint->position.y = 9.93;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.91;
+    waypoint->orientation.w = .39;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 33.60;
+    waypoint->position.y = 8.52;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.92;
+    waypoint->orientation.w = .37;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 33.59;
+    waypoint->position.y = 6.76;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.5;
+    waypoint->orientation.w = .86;
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 35.91;
+//    waypoint->position.y = 6.39;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = .24;
+//    waypoint->orientation.w = .96;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 36.75;
+//    waypoint->position.y = 7.12;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = .92;
+//    waypoint->orientation.w = .38;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 35.91;
+//    waypoint->position.y = 7.59;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = -.99;
+//    waypoint->orientation.w = .09;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 35.00;
+    waypoint->position.y = 6.76;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.92;
+    waypoint->orientation.w = .37;
     waypoints.push_back(*waypoint);
     velocities.push_back(0.2);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.58;
-    waypoint->position.y = 6.46;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.w = quat.getW();
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
+    waypoint->position.x = 35.00;
+    waypoint->position.y = 4.73;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.92;
+    waypoint->orientation.w = .37;
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 0.83;
-    waypoint->position.y = 12.20;
-    quat.setRPY(0, 0, 1.30);
-    waypoint->orientation.w = quat.getW();
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.2);
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 35.12;
+//    waypoint->position.y = 0.55;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = -.55;
+//    waypoint->orientation.w = .83;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 37.08;
+//    waypoint->position.y = -.39;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = -.13;
+//    waypoint->orientation.w = .99;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 37.68;
+//    waypoint->position.y = -3.5;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = -.86;
+//    waypoint->orientation.w = .49;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 35.12;
+//    waypoint->position.y = -2.34;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = .80;
+//    waypoint->orientation.w = .59;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
+
+//    waypoint = new geometry_msgs::Pose();
+//    waypoint->position.x = 34.43;
+//    waypoint->position.y = 2.33;
+//    waypoint->orientation.x = 0;
+//    waypoint->orientation.y = 0;
+//    waypoint->orientation.z = .91;
+//    waypoint->orientation.w = .37;
+//    waypoints.push_back(*waypoint);
+//    velocities.push_back(0.4);
 
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 1.76;
-    waypoint->position.y = 12.75;
-    quat.setRPY(0, 0, 0.032403);
-    waypoint->orientation.w = quat.getW();
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
+    waypoint->position.x = 32.06;
+    waypoint->position.y = 2.75;
+    waypoint->orientation.x = 0;
+    waypoint->orientation.y = 0;
+    waypoint->orientation.z = -.99;
+    waypoint->orientation.w = 0.0;
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
-
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 9.73;
-    waypoint->position.y = 12.75;
-    quat.setRPY(0, 0, 0.032403);
-    waypoint->orientation.w = quat.getW();
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-//    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-//    waypoint->position.x = 0.61;
-//    waypoint->position.y = 0.01;
-//    waypoints.push_back(*waypoint);
-
-//    waypoint = new geometry_msgs::Pose();
-//    waypoint->position.x = 0.60;
-//    waypoint->position.y = 10.93;
-//    waypoints.push_back(*waypoint);
-
-//    waypoint = new geometry_msgs::Pose();
-//    waypoint->position.x = 1.13;
-//    waypoint->position.y = 13.32;
-//    waypoints.push_back(*waypoint);
-
-//    waypoint = new geometry_msgs::Pose();
-//    waypoint->position.x = 2.13;
-//    waypoint->position.y = 13.32;
-//    waypoints.push_back(*waypoint);
-
-//    waypoint = new geometry_msgs::Pose();
-//    waypoint->position.x = 5.13;
-//    waypoint->position.y = 13.32;
-//    waypoints.push_back(*waypoint);
 
     counter = 0;
 
@@ -175,13 +275,13 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
 
         set_move_base_max_vel(velocities[counter]);
 
-//        if (counter % 2 == 0){
-//            ROS_INFO("Reduce Speed!!!");
-//            set_move_base_max_vel(0.2);
-//        }else{
-//            ROS_INFO("Increase Speed!!!");
-//            set_move_base_max_vel(0.4);
-//        }
+        //        if (counter % 2 == 0){
+        //            ROS_INFO("Reduce Speed!!!");
+        //            set_move_base_max_vel(0.2);
+        //        }else{
+        //            ROS_INFO("Increase Speed!!!");
+        //            set_move_base_max_vel(0.4);
+        //        }
 
         counter++;
         if (counter >= waypoints.size()){
@@ -208,9 +308,9 @@ void floor5_robot2::set_move_base_max_vel(double new_vel){
     double_param.value = new_vel;
     conf.doubles.push_back(double_param);
 
-//    double_param.name = "kurtana_roll_joint";
-//    double_param.value = yaw;
-//    conf.doubles.push_back(double_param);
+    //    double_param.name = "kurtana_roll_joint";
+    //    double_param.value = yaw;
+    //    conf.doubles.push_back(double_param);
 
     srv_req.config = conf;
 

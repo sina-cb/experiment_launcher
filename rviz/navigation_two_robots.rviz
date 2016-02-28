@@ -713,11 +713,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 118.741
+      Scale: 79.5376
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 2.49928
-      Y: -0.244519
+      X: 22.6781
+      Y: 11.6385
     Saved: ~
 Window Geometry:
   Displays:
