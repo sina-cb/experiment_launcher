@@ -38,12 +38,12 @@ Junction	21.55	6.70	THREE
 Junction	21.80	4.70	THREE
 Junction	25.32	12.84	FOUR
 Junction	30.0	12.76	FOUR
-Junction	30.0	9.58	FOUR
+Junction	30.20	9.28	FOUR
 Junction	29.79	2.40	THREE
 Junction	29.80	0.63	THREE
 Junction	33.0	12.87	THREE
 Junction	34.56	12.71	FOUR
-Junction	34.72	9.58	THREE
+Junction	35.05	9.21	THREE
 Junction	34.88	7.76	THREE
 Junction	33.68	8.00	FOUR
 Junction	34.80	6.41	FOUR

@@ -22,20 +22,10 @@ floor5_robot2::floor5_robot2()
 
     set_move_base_max_vel(0.4);
 
+    //1
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 30.0978;
-    waypoint->position.y = 13.0032;
-    quat.setRPY(0, 0, 0);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.66;
-    waypoint->position.y = 12.92;
+    waypoint->position.x = 26.43;
+    waypoint->position.y = 12.89;
     quat.setRPY(0, 0, -M_PI/3);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
@@ -44,9 +34,22 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //2
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 35.0825;
-    waypoint->position.y = 6.25;
+    waypoint->position.x = 29.91;
+    waypoint->position.y = 9.78;
+    quat.setRPY(0, 0, -M_PI/3);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    //3
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 34.88;
+    waypoint->position.y = 8.93;
     quat.setRPY(0, 0, -M_PI/2);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
@@ -55,6 +58,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //4
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 34.32;
     waypoint->position.y = 3.04;
@@ -66,6 +70,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //5
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 28.74;
     waypoint->position.y = 4.90;
@@ -77,6 +82,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //6
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 21.70;
     waypoint->position.y = 6.97;
@@ -88,20 +94,24 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
-    //    waypoint = new geometry_msgs::Pose();
-    //    waypoint->position.x = 25.29;
-    //    waypoint->position.y = 10.47;
-    //    quat.setRPY(0, 0, -M_PI/2);
-    //    waypoint->orientation.x = quat.getX();
-    //    waypoint->orientation.y = quat.getY();
-    //    waypoint->orientation.z = quat.getZ();
-    //    waypoint->orientation.w = quat.getW();
-    //    waypoints.push_back(*waypoint);
-    //    velocities.push_back(0.4);
-
+    //7
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 30.0978;
-    waypoint->position.y = 13.0032;
+    waypoint->position.x = 22.72;
+    waypoint->position.y = 12.97;
+    quat.setRPY(0, 0, M_PI / 2);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    // Loop Completed
+
+    //8
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 29.95;
+    waypoint->position.y = 12.93;
     quat.setRPY(0, 0, 0);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
@@ -110,6 +120,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //9
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 34.66;
     waypoint->position.y = 12.92;
@@ -121,6 +132,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //10
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 35.0825;
     waypoint->position.y = 6.25;
@@ -132,6 +144,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //11
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 34.32;
     waypoint->position.y = 3.04;
@@ -143,6 +156,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //12
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 28.74;
     waypoint->position.y = 4.90;
@@ -154,6 +168,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //13
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 21.70;
     waypoint->position.y = 6.97;
@@ -165,9 +180,10 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.4);
 
+    //14
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 22.89;
-    waypoint->position.y = 12.32;
+    waypoint->position.x = 23.06;
+    waypoint->position.y = 12.81;
     quat.setRPY(0, 0, M_PI / 2);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();

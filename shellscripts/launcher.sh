@@ -14,7 +14,7 @@ gazeboProc=
 
 while [ -z "$gazeboProc" ]; do 
 	
-	xterm -e "roslaunch experiment_launcher two_robots_gazebo_5th_floor.launch" &
+	xterm -e "roslaunch experiment_launcher two_robots_gazebo_5th_floor_big.launch" &
 	gazeboXterm=$!
 	# echo "gazeboXterm="$gazeboXterm
 
@@ -64,7 +64,7 @@ nestedAmclProc=
 
 while :; do 
 	
-	xterm -e "roslaunch experiment_launcher amcl_multiple_robots.launch" &
+	xterm -e "roslaunch experiment_launcher amcl_multiple_robots_big.launch" &
 	amclXterm=$!
 	# echo "amclXterm="$amclXterm
 
@@ -227,7 +227,7 @@ while :; do
 		rostopic pub -1 /robot1_experiment_state std_msgs/String 'amclProc crashed'
 		echo "amclProc crashed"
 #		break
-	elif test $diff -gt "600"; then
+	elif test $diff -gt "1200"; then
 		rostopic pub -1 /robot1_experiment_state std_msgs/String 'experiment timed out'
 		echo "experiment timed out"
 #		break
