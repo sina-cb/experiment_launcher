@@ -15,10 +15,10 @@
 // This is = (28.5 * M_PI)/180
 #define COLOR_MAX_ANGLE  0.497418837
 
-#define MIN_DISTANCE 1.2
+#define MIN_DISTANCE 1.0
 #define MAX_DISTANCE 10.0
-#define MAX_SPEED 0.4
-#define SPEED_OFFSET 0.35
+#define MAX_SPEED 0.6
+#define SPEED_OFFSET 0.4
 
 #define FINAL_STAGE_KICKOFF_X 0
 #define FINAL_STAGE_KICKOFF_Y 6
@@ -349,7 +349,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             if(min_measured_range <= MIN_DISTANCE
                     || leader_distance <= MIN_DISTANCE){
                 if(leader_distance > 0){
-                    cmd_vel_.linear.x = 0.05;
+                    cmd_vel_.linear.x = 0.09;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -359,7 +359,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 }
 
                 else{
-                    cmd_vel_.linear.x = 0.05;
+                    cmd_vel_.linear.x = 0.09;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -384,7 +384,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 if (!std::isnan(leader_distance)){
                     vel_pub_.publish(cmd_vel_);
                 }else{
-                    cmd_vel_.linear.x = 0.05;
+                    cmd_vel_.linear.x = 0.09;
                     cmd_vel_.angular.z = last_seen_theta * std::max(1 / cmd_vel_.linear.x , 1.0);
                 }
             }

@@ -3,7 +3,7 @@
 <launch>
   <env name="ROSCONSOLE_CONFIG_FILE" 
     value="$(find experiment_launcher)/log_config/custom_rosconsole.conf"/>
-  
+
   <param name="/use_sim_time" value="true"/>
 
   <!-- Run the map server -->
@@ -19,6 +19,7 @@
     <arg name="nested_amcl/initial_pose_x" value="16.15" />
     <arg name="nested_amcl/initial_pose_y" value="12.94" />
     <arg name="nested_amcl/initial_pose_a" value="00.00" />
+    <arg name="run_number" value="$(optenv RUN_NUMBER 1)" />
 
     <!-- SINA -->
     <arg name="nested_amcl/initial_leader_pose_x" value="19.26" />
@@ -36,6 +37,7 @@
       <arg name="odom_frame_id" value="/robot1_tf/odom"/>
       <arg name="base_frame_id" value="/robot1_tf/base_footprint"/>
       <arg name="global_frame_id" value="/map"/>
+      <arg name="run_number" value="$(arg run_number)"/>
       <arg name="use_map_topic" value="true"/>
     </include>
 
