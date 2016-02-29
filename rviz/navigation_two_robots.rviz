@@ -7,7 +7,6 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /Robot 11
-        - /Robot 11/Ground Truth1
         - /Robot 21
       Splitter Ratio: 0.683908
     Tree Height: 763
@@ -495,7 +494,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: Intensity
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -511,7 +510,7 @@ Visualization Manager:
           Topic: /robot2/scan
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -524,7 +523,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: ""
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -540,7 +539,7 @@ Visualization Manager:
           Topic: /robot2/mobile_base/sensors/bumper_pointcloud
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Arrow Length: 0.3
           Class: rviz/PoseArray
           Color: 85; 170; 255
@@ -713,11 +712,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 79.5376
+      Scale: 58.8117
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 22.6781
-      Y: 11.6385
+      X: 25.2906
+      Y: 8.88163
     Saved: ~
 Window Geometry:
   Displays:

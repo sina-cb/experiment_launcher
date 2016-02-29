@@ -146,31 +146,6 @@ behaveProc=
 # 	fi
 # done
 
-# Script for guaranteed safe start of floor5_robot2
-floor5_robot2Xterm=
-floor5_robot2Proc=
-
-while [ -z "$floor5_robot2Proc" ]; do 
-	
-	xterm -e "rosrun experiment_launcher floor5_robot2" &
-	floor5_robot2Xterm=$!
-	# echo "floor5_robot2Xterm="$floor5_robot2Xterm
-
-	sleep 2s
-
-	floor5_robot2Proc=$(pidof floor5_robot2)
-	# echo "floor5_robot2Proc="$floor5_robot2Proc
-
-	if test -z "$floor5_robot2Proc"; then
-		kill $floor5_robot2Xterm
-		sleep 5s
-		kill -9 $floor5_robot2Xterm
-		sleep 5s
-		echo "Had to force kill floor5_robot2 xterm...restarting it"
-	fi
-done
-
-
 
 # Script for guaranteed safe start of floor5_robot1
 floor5_robot1Xterm=
@@ -197,9 +172,35 @@ while [ -z "$floor5_robot1Proc" ]; do
 done
 
 
+sleep 20s
+
+# Script for guaranteed safe start of floor5_robot2
+floor5_robot2Xterm=
+floor5_robot2Proc=
+
+while [ -z "$floor5_robot2Proc" ]; do 
+	
+	xterm -e "rosrun experiment_launcher floor5_robot2" &
+	floor5_robot2Xterm=$!
+	# echo "floor5_robot2Xterm="$floor5_robot2Xterm
+
+	sleep 2s
+
+	floor5_robot2Proc=$(pidof floor5_robot2)
+	# echo "floor5_robot2Proc="$floor5_robot2Proc
+
+	if test -z "$floor5_robot2Proc"; then
+		kill $floor5_robot2Xterm
+		sleep 5s
+		kill -9 $floor5_robot2Xterm
+		sleep 5s
+		echo "Had to force kill floor5_robot2 xterm...restarting it"
+	fi
+done
+
+experiment_start_time=$(date +%s)
+
 while :; do
-
-
 	sleep 10s
 
 	gazeboProc=$(pidof gzclient)
@@ -217,46 +218,46 @@ while :; do
 	
 	diff=$((current_time-experiment_start_time))
 	#echo "diff ----"$diff
-	
+	echo $diff
 	
 	if test -z "$nestedAmclProc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'nestedAmclProc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'nestedAmclProc crashed'
 		echo "nestedAmclProc crashed"
 #		break
 	elif test -z "$amclProc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'amclProc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'amclProc crashed'
 		echo "amclProc crashed"
 #		break
-	elif test $diff -gt "1200"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'experiment timed out'
+	elif test $diff -gt "30"; then
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'experiment timed out'
 		echo "experiment timed out"
-#		break
-	elif test $((current_time-absolute_start_time)) -gt "900"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'shell timed out'
+		break
+	elif test $((current_time-absolute_start_time)) -gt "1200"; then
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'shell timed out'
 		echo "shell timed out"
-#		break	
+		break	
 	elif test -z "$floor5_robot1Proc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'floor5_robot1Proc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'floor5_robot1Proc crashed'
 		echo "floor5_robot1Proc crashed"
-#		break
+		break
 	elif test -z "$floor5_robot2Proc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'floor5_robot2Proc crashed'
-		echo "floor5_robot2Proc crashed"
-#		break
-	elif test "$behaveProc" -lt 2; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'behaveProc: one of the behaviours crashed'
-		echo "behaveProc: one of the behaviours crashed"
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'floor5_robot2Proc crashed'
+		echo "floor5_robot2Proc finished or crashed"
+		break
+#	elif test "$behaveProc" -lt 2; then
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'behaveProc: one of the behaviours crashed'
+#		echo "behaveProc: one of the behaviours crashed"
 #		break
 	elif test -z "$rvizProc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'rvizProc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'rvizProc crashed'
 		echo "rvizProc crashed"
 #		break
 	elif test -z "$cmvisionProc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'cmvisionProc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'cmvisionProc crashed'
 		echo "cmvisionProc crashed"
 #		break
 	elif test -z "$gazeboProc"; then
-		rostopic pub -1 /robot1_experiment_state std_msgs/String 'gazeboProc crashed'
+#		rostopic pub -1 /robot1_experiment_state std_msgs/String 'gazeboProc crashed'
 		echo "gazeboProc crashed"
 #		break
 	fi
@@ -269,9 +270,9 @@ while :; do
 done
 
 
-killall behave
+#killall behave
 sleep 2s
-killall -9 behave
+#killall -9 behave
 kill $nestedAmclProc $amclProc $floor5_robot1Proc $floor5_robot2Proc $rvizProc $cmvisionProc $gazeboProc
 sleep 2s
 kill -9 $nestedAmclProc $amclProc $floor5_robot1Proc $floor5_robot2Proc $rvizProc $cmvisionProc $gazeboProc
