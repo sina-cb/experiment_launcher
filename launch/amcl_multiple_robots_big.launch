@@ -42,8 +42,16 @@
     </include>
 
     <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch"/>
-  </group>
 
+    <!-- Trajectory Server -->
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina" launch-prefix="xterm -hold -e"> <!-- launch-prefix="xterm -hold -e" -->
+      <param name="source_frame_name" value="/robot1_tf/base_footprint"/>
+      <param name="target_frame_name" value="/map"/>
+      <param name="trajectory_update_rate" value="10"/>
+      <param name="trajectory_publish_rate" value="10"/>
+    </node>
+
+  </group>
 
   <group ns="robot2">
     <arg name="tf_prefix" value="robot2_tf" />
@@ -62,6 +70,15 @@
     </include>
 
     <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
+
+    <!-- Trajectory Server -->
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina" launch-prefix="xterm -hold -e"> <!-- launch-prefix="xterm -hold -e" -->
+      <param name="source_frame_name" value="/robot2_tf/base_footprint"/>
+      <param name="target_frame_name" value="/map"/>
+      <param name="trajectory_update_rate" value="10"/>
+      <param name="trajectory_publish_rate" value="10"/>
+    </node>
+
   </group>
 
   <include file="$(find experiment_launcher)/launch/ground_truth_publisher.launch">
