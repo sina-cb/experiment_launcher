@@ -12,7 +12,7 @@ gazeboProc=
 echo "Running Gazebo"
 while [ -z "$gazeboProc" ]; do 
 	
-	xterm -e "roslaunch experiment_launcher two_robots_gazebo_5th_floor_big.launch" &
+	xterm -e "roslaunch experiment_launcher two_robots_gazebo_5th_floor.launch" &
 	gazeboXterm=$!
 
 	sleep 15s
@@ -58,7 +58,7 @@ amclProc=
 nestedAmclProc=
 echo "Running AMCL"
 while :; do 
-	xterm -e "roslaunch experiment_launcher amcl_multiple_robots_big.launch" &
+	xterm -e "roslaunch experiment_launcher amcl_multiple_robots.launch" &
 	amclXterm=$!
 
 	sleep 25s
