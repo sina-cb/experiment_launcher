@@ -58,7 +58,7 @@ amclProc=
 nestedAmclProc=
 echo "Running AMCL"
 while :; do 
-	xterm -e "roslaunch experiment_launcher amcl_multiple_robots.launch" &
+	xterm -e "roslaunch experiment_launcher amcl_multiple_robots_no_traj.launch" &
 	amclXterm=$!
 
 	sleep 25s
