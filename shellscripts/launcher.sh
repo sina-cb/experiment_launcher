@@ -86,6 +86,8 @@ while :; do
 	fi
 done
 
+echo "Sleeping for 60 seconds till nested_amcl is initialized..."
+sleep 60s
 
 # Script for guaranteed safe start of floor5_robot1
 floor5_robot1Xterm=
@@ -109,8 +111,8 @@ while [ -z "$floor5_robot1Proc" ]; do
 	fi
 done
 
-echo "Sleeping for 20 seconds"
-sleep 20s
+echo "Sleeping for 30 seconds"
+sleep 30s
 
 # Script for guaranteed safe start of floor5_robot2
 floor5_robot2Xterm=
