@@ -7,7 +7,7 @@
   <param name="/use_sim_time" value="true"/>
 
   <!-- Run the map server -->
-  <arg name="map_file" default="$(find experiment_launcher)/map/map_big.yaml"/>
+  <arg name="map_file" default="$(find experiment_launcher)/map/map.yaml"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
   <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
     <param name="frame_id" value="/map" />
