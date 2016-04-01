@@ -36,7 +36,7 @@
       <arg name="base" value="$(arg base)"/>
       <arg name="stacks" value="$(arg stacks)"/>
       <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
-      <arg name="init_pose" value="-x 3.44 -y -1.01 -z 0 -R 0 -P 0 -Y 3.11"/>
+      <arg name="init_pose" value="-x 15.80 -y 12.43 -z 0 -R 0 -P 0 -Y 00.00"/>
       <arg name="robot_name" value="Robot1"/>
       <arg name="camera_depth_frame" value="/robot1_tf/camera_depth_frame"/>
     </include>
@@ -50,7 +50,7 @@
       <arg name="stacks" value="$(arg stacks)"/>
       <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
       <arg name="box_color" value="$(arg box_color)"/>
-      <arg name="init_pose" value="-x 0.62 -y -0.7 -z -0.00 -R 0 -P 0 -Y 1.58"/>
+      <arg name="init_pose" value="-x 18.91 -y 12.43 -z -0.00 -R 0 -P 0 -Y 00.00"/>
       <arg name="robot_name" value="Robot2"/>
       <arg name="camera_depth_frame" value="/robot2_tf/camera_depth_frame"/>
     </include>

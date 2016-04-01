@@ -349,7 +349,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             if(min_measured_range <= MIN_DISTANCE
                     || leader_distance <= MIN_DISTANCE){
                 if(leader_distance > 0){
-                    cmd_vel_.linear.x = 0.09;
+                    cmd_vel_.linear.x = 0.0;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -359,7 +359,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 }
 
                 else{
-                    cmd_vel_.linear.x = 0.09;
+                    cmd_vel_.linear.x = 0.0;
                     cmd_vel_.linear.y = 0.0;
                     cmd_vel_.linear.z = 0.0;
 
@@ -384,7 +384,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
                 if (!std::isnan(leader_distance)){
                     vel_pub_.publish(cmd_vel_);
                 }else{
-                    cmd_vel_.linear.x = 0.09;
+                    cmd_vel_.linear.x = 0.0;
                     cmd_vel_.angular.z = last_seen_theta * std::max(1 / cmd_vel_.linear.x , 1.0);
                 }
             }

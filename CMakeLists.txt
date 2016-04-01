@@ -24,29 +24,7 @@ catkin_package(
 
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS} include/hmm)
-
-add_library(hmm_learning
-	src/hmm/DETree.cpp
-    src/hmm/MCFHMM.cpp
-    src/hmm/Observation.cpp
-    src/hmm/Sample.cpp
-    src/hmm/Sampler.cpp
-    src/hmm/Timer.cpp
-)
-
-add_executable(motion_prediction
-   src/motion_prediction_node.cpp
-)
-
-target_link_libraries(motion_prediction
-    hmm_learning
-    ${Boost_LIBRARIES}
-    ${catkin_LIBRARIES}
-    ${GLOG_LIBRARY}
-    ${LIBXML2_LIBRARIES}
-    ${THREADS_LIBRARY}
-)
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(gazebo_ground_truth src/gazebo_ground_truth.cpp)
 target_link_libraries(gazebo_ground_truth ${catkin_LIBRARIES})
