@@ -14,9 +14,9 @@ string namespace_;
 ros::Subscriber sub;
 ros::Publisher marker_pub;
 
-float r[] = {1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
-float g[] = {0.0, 1.0, 0.0, 0.0, 1.0, 0.0};
-float b[] = {0.0, 0.0, 1.0, 0.0, 0.0, 1.0};
+float r[] = {0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
+float g[] = {0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+float b[] = {1.0, 1.0, 0.0, 1.0, 0.0, 1.0};
 
 void chatterCallback(const gazebo_msgs::ModelStates::ConstPtr& msg){
 

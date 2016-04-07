@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot name="box_left" xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <!-- Parameterised in part by the values in turtlebot_properties.urdf.xacro -->
+  <xacro:macro name="box_left" params="parent">
+
+    <joint name="box_left_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.5" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="box_left_link"/>
+    </joint>
+
+    <link name="box_left_link">
+      <visual>
+       <origin xyz="0.0 0.16 -0.2" rpy="0 0 ${M_PI/2}"/>
+        <geometry>
+          <box size="0.01 0.2 0.25"/>
+        </geometry>
+        <material name="white">
+          <color rgb="255 255 255" alpha="0.5"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.16 -0.2" rpy="0 0 ${M_PI/2}"/>
+        <geometry>
+          <box size="0.01 0.2 0.25"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="box_left_link">
+      <material>Gazebo/White</material>
+    </gazebo>
+  </xacro:macro>
+</robot>

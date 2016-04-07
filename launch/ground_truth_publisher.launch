@@ -23,4 +23,13 @@
     <node pkg="experiment_launcher" type="gazebo_ground_truth" name="gazebo_ground_truth"/>
   </group>
 
+  <group ns="robot3">
+    <arg name="tf_prefix" value="robot3_tf" />
+
+    <param name="frame_id" value="map"/>
+    <param name="robot_name" value="Robot3"/>
+    <param name="namespace_" value="robot3"/>
+    <node pkg="experiment_launcher" type="gazebo_ground_truth" name="gazebo_ground_truth"/>
+  </group>
+
 </launch>
