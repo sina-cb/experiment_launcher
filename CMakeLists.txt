@@ -34,3 +34,6 @@ target_link_libraries(floor5_robot1 ${catkin_LIBRARIES})
 
 add_executable(floor5_robot2 src/floor5_robot2.cpp)
 target_link_libraries(floor5_robot2 ${catkin_LIBRARIES})
+
+add_executable(floor5_robot3 src/floor5_robot3.cpp)
+target_link_libraries(floor5_robot3 ${catkin_LIBRARIES})
