@@ -12,18 +12,18 @@
 
     <link name="box_back_link">
       <visual>
-       <origin xyz="-0.16 0.0 -0.2" rpy="0 0 0"/>
+       <origin xyz="-0.16 0.0 -0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.01 0.3 0.3"/>
+          <box size="0.01 0.25 0.5"/>
         </geometry>
         <material name="white">
           <color rgb="255 255 255" alpha="0.5"/>
         </material>
       </visual>
       <collision>
-        <origin xyz="-0.16 0.0 -0.2" rpy="0 0 0"/>
+        <origin xyz="-0.16 0.0 -0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.01 0.3 0.3"/>
+          <box size="0.01 0.25 0.5"/>
         </geometry>
       </collision>
     </link>

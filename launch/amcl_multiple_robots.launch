@@ -83,9 +83,9 @@
 
   <group ns="robot3">
     <arg name="tf_prefix" value="robot3_tf" />
-    <arg name="amcl/initial_pose_x" value="33.46" />
-    <arg name="amcl/initial_pose_y" value="10.00" />
-    <arg name="amcl/initial_pose_a" value="-.49" />
+    <arg name="amcl/initial_pose_x" value="31.47" />
+    <arg name="amcl/initial_pose_y" value="09.07" />
+    <arg name="amcl/initial_pose_a" value="-.15" />
 
     <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
       <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>

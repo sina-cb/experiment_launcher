@@ -3,299 +3,212 @@
 #include <dynamic_reconfigure/Reconfigure.h>
 #include <dynamic_reconfigure/Config.h>
 
+#define IMAGE_WIDTH 640
+#define IMAGE_HEIGHT 480
+//This is = (57/640)*(M_PI/180)
+#define RADIANS_PER_PIXEL 0.001554434
+
+//KPM: Since Kinect camera has a field of view of 57 degrees
+// This is = (-28.5 * M_PI)/180
+//#define COLOR_MIN_ANGLE −0.497419
+#define COLOR_MIN_ANGLE −0.497418837
+// This is = (28.5 * M_PI)/180
+#define COLOR_MAX_ANGLE  0.497418837
+
+#define MIN_DISTANCE 0.7
+#define MAX_DISTANCE 10.0
+#define MAX_SPEED 0.6
+#define SPEED_OFFSET 0.4
+
+#define FINAL_STAGE_KICKOFF_X 0
+#define FINAL_STAGE_KICKOFF_Y 6
+
 #define DELTA_LINEAR 0.5
 #define DELTA_ANGULAR 0.52 //30 degrees
 
-floor5_robot3::floor5_robot3()
+namespace floor5_robot3{
+
+
+Floor5_Robot3::Floor5_Robot3()
 {
     ros::NodeHandle n;
 
-    robot3_goal_status_sub = n.subscribe("/robot3/move_base/status", 1, &floor5_robot3::robot3_goal_status_Callback, this);
-    amcl_pose_sub = n.subscribe("/robot3/amcl_pose", 1, &floor5_robot3::amcl_Callback, this);
+    first_color_seen_time = -1;
+    told_robot1_to_follow_me = false;
+    follow_or_not = true;
 
-    goal_pub2_ = n.advertise<geometry_msgs::PoseStamped>("/robot3/move_base_simple/goal", 1);
+    // Subscribers
+    laser_sub = n.subscribe("/robot3/scan", 1, &Floor5_Robot3::laser_Callback,this);
+    goal_status_sub = n.subscribe("/robot3/move_base/status", 1, &Floor5_Robot3::goal_status_Callback, this);
+    color_blob_sub = n.subscribe("/robot3/blobs", 1, &Floor5_Robot3::color_blob_Callback, this);
+    amcl_sub = n.subscribe("/robot3/amcl_pose", 1, &Floor5_Robot3::amcl_Callback, this);
+    nested_amcl_sub = n.subscribe("/robot3/nested_amcl_pose", 1, &Floor5_Robot3::nested_amcl_Callback, this);
+
+    // Publishers
+    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot3/cmd_vel_mux/input/teleop", 1);
+    goal_pub1_ = n.advertise<geometry_msgs::PoseStamped>("/robot3/move_base_simple/goal", 1);
+    cancel_goal_pub_ = n.advertise<actionlib_msgs::GoalID>("/robot3/move_base/cancel", 1);
+    robot3_exp_state_pub_ = n.advertise<std_msgs::String>("/robot3_experiment_state", 1);
+    robot_1_communication = n.advertise<std_msgs::String>("/robot3/robot1_communication", 1);
 
     fixed_frame = std::string("/map");
 
-    x = 0;
-    y = 0;
+    x       = 0;
+    y       = 0;
 
-    set_move_base_max_vel(0.4);
-
-    //1
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 30.21;
-    waypoint->position.y = 13.09;
-    quat.setRPY(0, 0, 0);
+    waypoint->position.x = 34.11;
+    waypoint->position.y = 08.61;
+    quat.setRPY(0, 0, -.15);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
     waypoint->orientation.w = quat.getW();
     waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //2
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.91;
-    waypoint->position.y = 9.78;
-    quat.setRPY(0, 0, -M_PI/3);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //3
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.88;
-    waypoint->position.y = 8.93;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //3.5
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 35.0825;
-    waypoint->position.y = 6.25;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.2);
-
-    //4
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.32;
-    waypoint->position.y = 3.04;
-    quat.setRPY(0, 0, (-2 * M_PI / 3));
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //5
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 28.74;
-    waypoint->position.y = 4.90;
-    quat.setRPY(0, 0, -M_PI);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //6
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 21.70;
-    waypoint->position.y = 6.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //7
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 22.72;
-    waypoint->position.y = 12.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    // Loop Completed
-
-    //8
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.95;
-    waypoint->position.y = 12.93;
-    quat.setRPY(0, 0, 0);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //9
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.66;
-    waypoint->position.y = 12.92;
-    quat.setRPY(0, 0, -M_PI/3);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //10
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 35.0825;
-    waypoint->position.y = 6.25;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.2);
-
-    //11
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.32;
-    waypoint->position.y = 3.04;
-    quat.setRPY(0, 0, (-2 * M_PI / 3));
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //12
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 28.74;
-    waypoint->position.y = 4.90;
-    quat.setRPY(0, 0, -M_PI);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //13
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 21.70;
-    waypoint->position.y = 6.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //14
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 23.06;
-    waypoint->position.y = 12.81;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
 
     counter = 0;
 
+    publish_goal_flag = true;
+
     seeking_waypoint = false;
     loaded_waypoint  = false;
+    following_stage = false;
 
-    my_pose_x = 0;
-    my_pose_y = 0;
-    my_pose_theta = 0;
+    color_centroid_x = -99;
+    color_centroid_y = -99;
+    leader_distance = 0.0;
+    leader_theta = 1.0;
+    last_seen_theta = 0.0;
+    color_seen_time = 0.0;
+    nested_amcl_publish_timestamp = 0.0;
+
+    my_pose_x = 0.0;
+    my_pose_y = 0.0;
 }
 
+void Floor5_Robot3::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
 
-void floor5_robot3::robot3_goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array2){
-    actionlib_msgs::GoalStatus status_list_;
-    geometry_msgs::PoseStamped goal;
+    std::stringstream state_stream;
+    std_msgs::String state_msg;
 
-    if(!status_array2->status_list.empty()){
-        status_list_ = status_array2->status_list.back();
+    if(!following_stage){
+        actionlib_msgs::GoalStatus status_list_;
+        geometry_msgs::PoseStamped goal1;
+
+        if(!status_array->status_list.empty()){
+            status_list_ = status_array->status_list.back();
 
 
-        if(robot3_goalStatus != status_list_.status
-                || robot3_status_goal_id.compare(status_list_.goal_id.id) != 0 ){
-            ROS_INFO("Robot3 Status: %d \tGoal ID: %s", status_list_.status, status_list_.goal_id.id.c_str());
+            if(robot3_goalStatus != status_list_.status
+                    || robot3_status_goal_id.compare(status_list_.goal_id.id) != 0 ){
+                ROS_INFO("Robot3 Status: %d \tGoal ID: %s", status_list_.status, status_list_.goal_id.id.c_str());
+            }
+
+            current_goal_id = status_list_.goal_id;
+            robot3_goalStatus = status_list_.status;
+            robot3_status_goal_id = status_list_.goal_id.id;
         }
-
-        robot3_goalStatus = status_list_.status;
-        robot3_status_goal_id = status_list_.goal_id.id;
-    }
-    else{
-        ROS_INFO("Robot3 No status received ... publishing goal again");
-        publish_goal_flag = true;
-    }
-
-    if(!seeking_waypoint){
-        if(!loaded_waypoint){
-            x = waypoints[counter].position.x;
-            y = waypoints[counter].position.y;
-
-            quat.setX(waypoints[counter].orientation.x);
-            quat.setY(waypoints[counter].orientation.y);
-            quat.setZ(waypoints[counter].orientation.z);
-            quat.setW(waypoints[counter].orientation.w);
-
-            loaded_waypoint = true;
+        else{
+            ROS_INFO("Robot3 No status received ... publishing goal again");
             publish_goal_flag = true;
-            seeking_waypoint = true;
         }
-    }
 
-    tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
-    tf::poseStampedTFToMsg(p1, goal);
+        if(!seeking_waypoint){
+            if(!loaded_waypoint){
+                x = waypoints[counter].position.x;
+                y = waypoints[counter].position.y;
 
-    if(publish_goal_flag){
-        goal_pub2_.publish(goal);
-        ROS_INFO("Robot 3 seeking point : %f, %f ", x, y);
-        publish_goal_flag = false;
-    }
+                quat.setX(waypoints[counter].orientation.x);
+                quat.setY(waypoints[counter].orientation.y);
+                quat.setZ(waypoints[counter].orientation.z);
+                quat.setW(waypoints[counter].orientation.w);
 
-    if(robot3_goalStatus == 1){
-        publish_goal_flag = false;
-    }
-
-    if (seeking_waypoint
-            && my_pose_x <= (waypoints[counter].position.x + DELTA_LINEAR)
-            && my_pose_x >= (waypoints[counter].position.x - DELTA_LINEAR)
-            && my_pose_y <= (waypoints[counter].position.y + DELTA_LINEAR)
-            && my_pose_y >= (waypoints[counter].position.y - DELTA_LINEAR)
-            ){
-        ROS_INFO("Robot3 reached Waypoint %d", (int)(counter));
-        seeking_waypoint = false;
-        loaded_waypoint  = false;
-
-        set_move_base_max_vel(velocities[counter]);
-
-        //        if (counter % 2 == 0){
-        //            ROS_INFO("Reduce Speed!!!");
-        //            set_move_base_max_vel(0.2);
-        //        }else{
-        //            ROS_INFO("Increase Speed!!!");
-        //            set_move_base_max_vel(0.4);
-        //        }
-
-        counter++;
-        if (counter >= waypoints.size()){
-            ROS_INFO("Reached the final goal!");
-            ROS_INFO("This process is done!");
-            exit(0);
+                loaded_waypoint = true;
+                publish_goal_flag = true;
+                seeking_waypoint = true;
+            }
         }
+
+        tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
+        tf::poseStampedTFToMsg(p1, goal1);
+
+        if(publish_goal_flag){
+            goal_pub1_.publish(goal1);
+            ROS_INFO("Robot3 seeking point : %f, %f ", x, y);
+            publish_goal_flag = false;
+        }
+
+        if(robot3_goalStatus == 1){
+            publish_goal_flag = false;
+        }
+
+
+        if(seeking_waypoint
+                && !following_stage){
+            if(my_pose_x <= (waypoints[counter].position.x + DELTA_LINEAR)
+                    && my_pose_x >= (waypoints[counter].position.x - DELTA_LINEAR)
+                    && my_pose_y <= (waypoints[counter].position.y + DELTA_LINEAR)
+                    && my_pose_y >= (waypoints[counter].position.y - DELTA_LINEAR)
+                    ){
+
+                ROS_INFO("Robot3 reached Waypoint %d", (int)(counter));
+                cancel_goal_pub_.publish(current_goal_id);
+                seeking_waypoint = false;
+                loaded_waypoint  = false;
+                publish_goal_flag = true;
+
+                if (follow_or_not)
+                    following_stage = true;
+
+                counter++;
+                if (counter >= waypoints.size()){
+                    ROS_INFO("Reached the final goal!");
+                }
+            }
+        }
+
     }
 
 }
 
-void floor5_robot3::set_move_base_max_vel(double new_vel){
+void Floor5_Robot3::color_blob_Callback(const cmvision::BlobsConstPtr &Blobs){
+    cmvision::Blobs Blobs_ = *Blobs;
+    cmvision::Blob temp_blob;
+
+    if(Blobs_.blob_count == 0){
+        color_centroid_x = -99;
+        color_centroid_y = -99;
+        leader_theta = 1.0;
+        leader_distance = 0.0;
+    } else {
+
+        color_centroid_x = 0.0;
+        color_centroid_y = 0.0;
+
+        for(uint i=0; i<Blobs_.blob_count; i++ ){
+            temp_blob = Blobs_.blobs.at(i);
+
+            //Contiguous landmark assumption
+            color_centroid_x = color_centroid_x + temp_blob.x;
+            color_centroid_y = color_centroid_y + temp_blob.y;
+        }
+
+        color_centroid_x = color_centroid_x/Blobs_.blob_count;
+        color_centroid_y = color_centroid_y/Blobs_.blob_count;
+
+        leader_theta = ((IMAGE_WIDTH/2) - color_centroid_x) * RADIANS_PER_PIXEL;
+        last_seen_theta = leader_theta;
+
+        // Get last color seen timestamp
+        struct timeval tp;
+        gettimeofday(&tp, NULL);
+        color_seen_time = tp.tv_sec; //get current timestamp in seconds
+
+    }
+
+}
+
+void Floor5_Robot3::set_move_base_max_vel(double new_vel){
 
     dynamic_reconfigure::ReconfigureRequest srv_req;
     dynamic_reconfigure::ReconfigureResponse srv_resp;
@@ -310,6 +223,14 @@ void floor5_robot3::set_move_base_max_vel(double new_vel){
     double_param.value = new_vel;
     conf.doubles.push_back(double_param);
 
+    double_param.name = "min_vel_x";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
+    double_param.name = "min_trans_vel";
+    double_param.value = new_vel;
+    conf.doubles.push_back(double_param);
+
     //    double_param.name = "kurtana_roll_joint";
     //    double_param.value = yaw;
     //    conf.doubles.push_back(double_param);
@@ -320,24 +241,216 @@ void floor5_robot3::set_move_base_max_vel(double new_vel){
 
 }
 
-void floor5_robot3::amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose){
+void Floor5_Robot3::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
+
+    max_beams = laser_scan->ranges.size();
+
+    double current_range = 0.0;
+    double min_measured_range = 99.0;
+
+    bool got_leader_distance = false;
+
+
+    // Get current timestamp
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    long int current_timestamp = tp.tv_sec; //get current timestamp in seconds
+
+    // no published data from nested_amcl for more than 120 seconds
+    // ...nested_amcl must be hung/stuck/deadlocked
+    if( (current_timestamp - nested_amcl_publish_timestamp) > 120){
+        std::stringstream state_stream;
+        std_msgs::String state_msg;
+
+        ROS_INFO("----nested_amcl seems to be stuck. Forcefully Shutting down as a crash.----");
+
+        state_stream << "nested_amcl_stuck reporting as crashed";
+        state_msg.data = state_stream.str();
+        robot3_exp_state_pub_.publish(state_msg);
+    }
+
+    if(color_centroid_x >= 0.0){
+
+        for(int beam_no = 0 ; beam_no < max_beams ; beam_no++){
+
+            current_range = laser_scan->ranges.at(beam_no);
+            if(min_measured_range > current_range
+                    && beam_no > std::floor(max_beams / 5)
+                    && beam_no < std::ceil(4 * max_beams / 5)
+                    ){
+                min_measured_range = current_range;
+            }
+
+            if(((laser_scan->angle_min + (beam_no * laser_scan->angle_increment)) >= leader_theta)
+                    && !got_leader_distance){
+
+                if(beam_no == 0){
+                    beam_no++;
+                }
+                leader_distance = std::min(laser_scan->ranges.at(beam_no),
+                                           laser_scan->ranges.at(beam_no-1));
+
+                got_leader_distance = true;
+            }
+        }
+    }
+
+    if(counter > 0
+            && leader_distance > 0
+            && leader_distance <= laser_scan->range_max
+            && follow_or_not){
+        seeking_waypoint = false;
+
+        following_stage = true;
+
+        if (first_color_seen_time == -1){
+            struct timeval tp;
+            gettimeofday(&tp, NULL);
+            first_color_seen_time = tp.tv_sec;
+        }
+
+        cancel_goal_pub_.publish(current_goal_id);
+        ROS_INFO("Robot3 switching to follower behaviour now because we found the leader again!");
+    }
+
+    if(following_stage){
+
+        if (first_color_seen_time != -1){
+            ROS_ERROR("Time: %d", current_timestamp - first_color_seen_time);
+        }
+
+        if (first_color_seen_time != -1 && current_timestamp - first_color_seen_time > 20
+                && !told_robot1_to_follow_me){
+            // Publish the command to robot 1
+            std::stringstream commu_stream;
+            std_msgs::String commu_msg;
+
+            commu_stream << "subscribe_to_yellow";
+            commu_msg.data = commu_stream.str();
+            robot_1_communication.publish(commu_msg);
+            told_robot1_to_follow_me = true;
+        }
+
+        // Just follow the leader for 20 secs
+        if (first_color_seen_time != -1 && current_timestamp - first_color_seen_time > 40){
+            follow_or_not = false;
+            publish_goal_flag = true;
+            seeking_waypoint = false;
+            loaded_waypoint  = false;
+            following_stage = false;
+
+            ROS_INFO("We are done following!!!");
+
+            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+            waypoint->position.x = 32.87;
+            waypoint->position.y = 6.52;
+            quat.setRPY(0, 0, .45);
+            waypoint->orientation.x = quat.getX();
+            waypoint->orientation.y = quat.getY();
+            waypoint->orientation.z = quat.getZ();
+            waypoint->orientation.w = quat.getW();
+            waypoints.push_back(*waypoint);
+
+            std::stringstream commu_stream;
+            std_msgs::String commu_msg;
+
+            commu_stream << "subscribe_to_green";
+            commu_msg.data = commu_stream.str();
+            robot_1_communication.publish(commu_msg);
+
+            first_color_seen_time = -1;
+        }else{
+            bool use_move_base = false;
+            if(min_measured_range <= MIN_DISTANCE
+                    || leader_distance <= MIN_DISTANCE){
+                if(leader_distance > 0){
+                    cmd_vel_.linear.x = 0.0;
+                    cmd_vel_.linear.y = 0.0;
+                    cmd_vel_.linear.z = 0.0;
+
+                    cmd_vel_.angular.x = 0.0;
+                    cmd_vel_.angular.y = 0.0;
+                    cmd_vel_.angular.z = 2 * last_seen_theta;
+                } else {
+                    cmd_vel_.linear.x = 0.0;
+                    cmd_vel_.linear.y = 0.0;
+                    cmd_vel_.linear.z = 0.0;
+
+                    cmd_vel_.angular.x = 0.0;
+                    cmd_vel_.angular.y = 0.0;
+                    cmd_vel_.angular.z = 2 * last_seen_theta;
+                }
+            } else {
+                cmd_vel_.linear.x = leader_distance * (MAX_SPEED / MAX_DISTANCE) + SPEED_OFFSET;
+                cmd_vel_.linear.y = 0.0;
+                cmd_vel_.linear.z = 0.0;
+
+
+                cmd_vel_.angular.x = 0.0;
+                cmd_vel_.angular.y = 0.0;
+                cmd_vel_.angular.z = last_seen_theta * std::max(1 / cmd_vel_.linear.x , 1.0);
+            }
+
+            if(!use_move_base){
+                if (!std::isnan(leader_distance)){
+                    vel_pub_.publish(cmd_vel_);
+                }else{
+                    cmd_vel_.linear.x = 0.0;
+                    cmd_vel_.angular.z = last_seen_theta * std::max(1 / cmd_vel_.linear.x , 1.0);
+                }
+            }
+
+            ROS_INFO("distance, speed: %f | %f ", leader_distance, cmd_vel_.linear.x);
+        }
+    }
+
+}
+
+void Floor5_Robot3::amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose){
 
     geometry_msgs::PoseWithCovarianceStamped amcl_pose_ = *amcl_pose;
+
+    // Get last nested_amcl_publish_timestamp
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    nested_amcl_publish_timestamp = tp.tv_sec; //get current timestamp in seconds
 
     my_pose_x = amcl_pose_.pose.pose.position.x;
     my_pose_y = amcl_pose_.pose.pose.position.y;
     my_pose_theta = amcl_pose_.pose.pose.orientation.z;
+
+    std::stringstream state_stream;
+    std_msgs::String state_msg;
+
+    if(seeking_waypoint){
+        state_stream << "seeking waypoint " << counter;
+        state_msg.data = state_stream.str();
+        robot3_exp_state_pub_.publish(state_msg);
+    }
+    else if(following_stage){
+        state_stream << "following stage";
+        state_msg.data = state_stream.str();
+        robot3_exp_state_pub_.publish(state_msg);
+    }
 }
 
+void Floor5_Robot3::nested_amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &nested_amcl_pose){
 
+    geometry_msgs::PoseWithCovarianceStamped nested_amcl_pose_ = *nested_amcl_pose;
+
+
+    leader_pose_x = nested_amcl_pose_.pose.pose.position.x;
+    leader_pose_y = nested_amcl_pose_.pose.pose.position.y;
+    leader_pose_theta = nested_amcl_pose_.pose.pose.orientation.z;
+}
+
+} // End of Namespace
 
 int main(int argc, char **argv)
 {
-
     ros::init(argc, argv, "floor5_robot3");
 
-    floor5_robot3 robot3_runner;
-
+    floor5_robot3::Floor5_Robot3 robot3_runner;
 
     ros::spin();
 

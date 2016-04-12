@@ -31,14 +31,14 @@ namespace floor5_robot1{
 
 Floor5_Robot1::Floor5_Robot1()
 {
-    ros::NodeHandle n;
-
     // Subscribers
     laser_sub = n.subscribe("/robot1/scan", 1, &Floor5_Robot1::laser_Callback,this);
     goal_status_sub = n.subscribe("/robot1/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
     color_blob_sub = n.subscribe("/robot1/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
     amcl_sub = n.subscribe("/robot1/amcl_pose", 1, &Floor5_Robot1::amcl_Callback, this);
     nested_amcl_sub = n.subscribe("/robot1/nested_amcl_pose", 1, &Floor5_Robot1::nested_amcl_Callback, this);
+    robot3_communication = n.subscribe("/robot3/robot1_communication", 1, &Floor5_Robot1::communication_3_Callback, this);
+    robot1_communication = n.subscribe("/robot2/robot1_communication", 1, &Floor5_Robot1::communication_2_Callback, this);
 
     // Publishers
     vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel_mux/input/teleop", 1);
@@ -48,12 +48,14 @@ Floor5_Robot1::Floor5_Robot1()
 
     fixed_frame = std::string("/map");
 
+    follow_or_not = true;
+
     x       = 0;
     y       = 0;
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 18.00;
-    waypoint->position.y = 12.94;
+    waypoint->position.x = 15.38;
+    waypoint->position.y = 12.85;
 //    quat.setRPY(0, 0, 2.436771);
     waypoint->orientation.x = 0.0;
     waypoint->orientation.y = 0.0;
@@ -79,6 +81,44 @@ Floor5_Robot1::Floor5_Robot1()
 
     my_pose_x = 0.0;
     my_pose_y = 0.0;
+}
+
+void Floor5_Robot1::communication_3_Callback(const std_msgs::String &communication){
+
+    ROS_ERROR("Got this msg: %s", ((string)communication.data).c_str());
+
+    string cmd = communication.data;
+
+    if (cmd.find("yellow") != std::string::npos){
+        ROS_ERROR("Subscribe to Yellow now!");
+        color_blob_sub = n.subscribe("/robot1_yellow/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
+    }else if (cmd.find("green") != std::string::npos){
+        ROS_ERROR("Subscribe to Green now!");
+        color_blob_sub = n.subscribe("/robot1/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
+    }
+
+}
+
+void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communication){
+
+    ROS_ERROR("Got this msg: %s", ((string)communication.data).c_str());
+
+    follow_or_not = false;
+    publish_goal_flag = true;
+    seeking_waypoint = false;
+    loaded_waypoint  = false;
+    following_stage = false;
+
+    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 14.55;
+    waypoint->position.y = 12.62;
+    quat.setRPY(0, 0, -1.7);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+
 }
 
 void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
@@ -152,7 +192,9 @@ void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayCo
                 seeking_waypoint = false;
                 loaded_waypoint  = false;
                 publish_goal_flag = true;
-                following_stage = true;
+
+                if (follow_or_not)
+                    following_stage = true;
 
                 counter++;
                 if (counter >= waypoints.size()){
@@ -298,7 +340,8 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
     if(counter > 0
             && leader_distance > 0
-            && leader_distance <= laser_scan->range_max){
+            && leader_distance <= laser_scan->range_max
+            && follow_or_not){
         seeking_waypoint = false;
         following_stage = true;
 
@@ -311,7 +354,7 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
         int max_lost_time = 1;
         if( (current_timestamp - color_seen_time) > max_lost_time){ // not seen leader for more than 60 seconds
-            ROS_INFO("----Lost sight of the leader for %d second, we're using the last known nested_particle_pose and go towards it----", max_lost_time);
+            ROS_ERROR("----Lost sight of the leader for %d second, we're using the last known nested_particle_pose and go towards it----", max_lost_time);
 
 //            leader_distance = std::sqrt(std::pow(leader_pose_x - my_pose_x, 2) + std::pow(leader_pose_y - my_pose_y, 2));
 //            double temp_theta = std::asin((leader_pose_y - my_pose_y) / leader_distance);
@@ -320,15 +363,15 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
             double angle_correction = std::asin((leader_pose_x - my_pose_x) / std::sqrt(std::pow(leader_pose_x - my_pose_x, 2)
                                                                                         + std::pow(leader_pose_y - my_pose_y, 2)));
 
-            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-            waypoint->position.x = leader_pose_x;
-            waypoint->position.y = leader_pose_y;
-            quat.setRPY(0, 0, (leader_theta + angle_correction));
-            waypoint->orientation.w = quat.getW();
-            waypoint->orientation.x = quat.getX();
-            waypoint->orientation.y = quat.getY();
-            waypoint->orientation.z = quat.getZ();
-            waypoints.push_back(*waypoint);
+//            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+//            waypoint->position.x = leader_pose_x;
+//            waypoint->position.y = leader_pose_y;
+//            quat.setRPY(0, 0, (leader_theta + angle_correction));
+//            waypoint->orientation.w = quat.getW();
+//            waypoint->orientation.x = quat.getX();
+//            waypoint->orientation.y = quat.getY();
+//            waypoint->orientation.z = quat.getZ();
+//            waypoints.push_back(*waypoint);
 
             seeking_waypoint = false;
             loaded_waypoint  = false;

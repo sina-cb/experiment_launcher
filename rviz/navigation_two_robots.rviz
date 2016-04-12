@@ -314,19 +314,12 @@ Visualization Manager:
           Name: AMCL Particles
           Topic: /robot1/particlecloud
           Value: false
-        - Arrow Length: 0.3
-          Class: rviz/PoseArray
-          Color: 170; 0; 0
-          Enabled: true
-          Name: Nested AMCL Particles
-          Topic: /robot1/nested_particlecloud
-          Value: true
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
-          Color: 25; 255; 0
+          Color: 85; 0; 0
           Enabled: true
-          Line Style: Lines
+          Line Style: Billboards
           Line Width: 0.03
           Name: Full Plan
           Offset:
@@ -334,6 +327,13 @@ Visualization Manager:
             Y: 0
             Z: 0
           Topic: /robot1/move_base/NavfnROS/plan
+          Value: true
+        - Arrow Length: 0.3
+          Class: rviz/PoseArray
+          Color: 170; 0; 0
+          Enabled: true
+          Name: Nested AMCL Particles
+          Topic: /robot1/nested_particlecloud
           Value: true
         - Class: rviz/Group
           Displays:
@@ -723,9 +723,9 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
-          Color: 25; 255; 0
+          Color: 0; 0; 255
           Enabled: true
-          Line Style: Lines
+          Line Style: Billboards
           Line Width: 0.03
           Name: Full Plan
           Offset:
@@ -1115,9 +1115,9 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
-          Color: 25; 255; 0
+          Color: 0; 85; 0
           Enabled: true
-          Line Style: Lines
+          Line Style: Billboards
           Line Width: 0.03
           Name: Full Plan
           Offset:
@@ -1291,11 +1291,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 62.5088
+      Scale: 64.2119
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 24.9968
-      Y: 7.69454
+      X: 25.177
+      Y: 7.75738
     Saved: ~
 Window Geometry:
   Displays:

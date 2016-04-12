@@ -63,7 +63,7 @@
       <arg name="base" value="$(arg base)"/>
       <arg name="stacks" value="circles"/>
       <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
-      <arg name="init_pose" value="-x 32.96 -y 9.49 -z 0 -R 0 -P 0 -Y -.49"/>
+      <arg name="init_pose" value="-x 31.10 -y 08.58 -z 0 -R 0 -P 0 -Y -.15"/>
       <arg name="robot_name" value="Robot3"/>
       <arg name="camera_depth_frame" value="/robot3_tf/camera_depth_frame"/>
     </include>

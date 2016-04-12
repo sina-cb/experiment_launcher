@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+
+<launch>
+    <include file="$(find experiment_launcher)/launch/includes/cmvision_node_robot1.launch.xml"/>
+    <include file="$(find experiment_launcher)/launch/includes/cmvision_node_robot1_yellow.launch.xml"/>
+    <include file="$(find experiment_launcher)/launch/includes/cmvision_node_robot3.launch.xml"/>
+</launch>

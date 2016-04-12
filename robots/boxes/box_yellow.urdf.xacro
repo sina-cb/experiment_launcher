@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot name="box_yellow" xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <!-- Parameterised in part by the values in turtlebot_properties.urdf.xacro -->
+  <xacro:macro name="box_yellow" params="parent">
+
+    <joint name="box_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.5" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="box_yellow_link"/>
+    </joint>
+
+    <link name="box_yellow_link">
+      <visual>
+       <origin xyz="0 0 0" rpy="0 0 ${M_PI/2}"/>
+        <geometry>
+          <box size="0.2 0.2 0.2"/>
+        </geometry>
+        <material name="yellow">
+          <color rgb="255 255 255" alpha="0.5"/>
+        </material>
+      </visual>
+  	  <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 ${M_PI/2}"/>
+  	    <geometry>
+  	      <box size="0.2 0.2 0.2"/>
+  	    </geometry>
+  	  </collision>
+    </link>
+
+    <gazebo reference="box_yellow_link">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+  </xacro:macro>
+</robot>

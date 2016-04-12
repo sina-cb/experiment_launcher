@@ -6,6 +6,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <sensor_msgs/LaserScan.h>
 #include <actionlib_msgs/GoalStatusArray.h>
+#include <std_msgs/String.h>
 #include <cmvision/Blobs.h>
 #include <tf/tf.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
@@ -19,6 +20,7 @@ public:
 
     ros::Subscriber robot2_goal_status_sub, amcl_pose_sub;
     ros::Publisher goal_pub2_;
+    ros::Publisher robot_1_communication;
 
     void robot2_goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array2);
     void amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
