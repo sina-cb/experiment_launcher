@@ -24,6 +24,8 @@ class Floor5_Robot1
 public:
     Floor5_Robot1();
 
+    ros::NodeHandle n;
+
     int max_beams;
     double straight_prob;
     double right_prob;
@@ -38,6 +40,7 @@ public:
     bool seeking_waypoint, loaded_waypoint, publish_goal_flag;
 
     bool following_stage;
+    bool follow_or_not;
 
     ros::Publisher vel_pub_;
     ros::Publisher goal_pub1_;
@@ -49,6 +52,7 @@ public:
     ros::Subscriber color_blob_sub;
     ros::Subscriber amcl_sub;
     ros::Subscriber nested_amcl_sub;
+    ros::Subscriber robot1_communication;
 
     std::string fixed_frame;
     double theta;
@@ -73,6 +77,7 @@ public:
     void color_blob_Callback(const cmvision::BlobsConstPtr& Blobs);
     void amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
     void nested_amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &nested_amcl_pose);
+    void communication_2_Callback(const std_msgs::String &communication);
 
     void robot2_goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr& status_array2);
     void set_move_base_max_vel(double new_vel);

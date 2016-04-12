@@ -14,6 +14,7 @@ floor5_robot2::floor5_robot2()
     amcl_pose_sub = n.subscribe("/robot2/amcl_pose", 1, &floor5_robot2::amcl_Callback, this);
 
     goal_pub2_ = n.advertise<geometry_msgs::PoseStamped>("/robot2/move_base_simple/goal", 1);
+    robot_1_communication = n.advertise<std_msgs::String>("/robot2/robot1_communication", 1);
 
     fixed_frame = std::string("/map");
 
@@ -122,8 +123,8 @@ floor5_robot2::floor5_robot2()
 
     //8
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.95;
-    waypoint->position.y = 12.93;
+    waypoint->position.x = 30.21;
+    waypoint->position.y = 13.09;
     quat.setRPY(0, 0, 0);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
@@ -134,8 +135,8 @@ floor5_robot2::floor5_robot2()
 
     //9
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.66;
-    waypoint->position.y = 12.92;
+    waypoint->position.x = 29.91;
+    waypoint->position.y = 9.78;
     quat.setRPY(0, 0, -M_PI/3);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
@@ -145,6 +146,18 @@ floor5_robot2::floor5_robot2()
     velocities.push_back(0.4);
 
     //10
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 34.88;
+    waypoint->position.y = 8.93;
+    quat.setRPY(0, 0, -M_PI/2);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    //10.5
     waypoint = new geometry_msgs::Pose();
     waypoint->position.x = 35.0825;
     waypoint->position.y = 6.25;
@@ -194,9 +207,21 @@ floor5_robot2::floor5_robot2()
 
     //14
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 23.06;
-    waypoint->position.y = 12.81;
+    waypoint->position.x = 22.72;
+    waypoint->position.y = 12.97;
     quat.setRPY(0, 0, M_PI / 2);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+    velocities.push_back(0.4);
+
+    //15
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 29.95;
+    waypoint->position.y = 12.93;
+    quat.setRPY(0, 0, 0);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
@@ -286,7 +311,16 @@ void floor5_robot2::robot2_goal_status_Callback(const actionlib_msgs::GoalStatus
         //        }
 
         counter++;
-        if (counter >= waypoints.size()){
+        if (counter >= waypoints.size() - 1){
+            ROS_INFO("Robot 2 says goodbye!");
+
+            std::stringstream commu_stream;
+            std_msgs::String commu_msg;
+
+            commu_stream << "goodbye";
+            commu_msg.data = commu_stream.str();
+            robot_1_communication.publish(commu_msg);
+        }else if (counter >= waypoints.size() - 1){
             ROS_INFO("Reached the final goal!");
             ROS_INFO("This process is done!");
             exit(0);
