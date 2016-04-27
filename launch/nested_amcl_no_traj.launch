@@ -6,10 +6,10 @@
 
   <!-- Run the map server -->
   <arg name="map_file" default="$(find experiment_launcher)/map/map.yaml"/>
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
-  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
     <param name="frame_id" value="/map" />
-  </node> -->
+  </node>
 
   <!-- NESTED AMCL FOR ROBOT 1 -->
   <arg name="nested_amcl/initial_pose_x" value="16.15" />
