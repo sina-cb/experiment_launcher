@@ -25,9 +25,7 @@
   <include file="$(find experiment_launcher)/launch/includes_phys/netbook.launch.xml">
     <arg name="battery" value="$(arg battery)" />
   </include>
-  <node name="depthimage_to_scan_nested" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan">
-    <param name="image" value="/camera/depth_registered/image"/>
-  </node>
+  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml"/>
 
   <!-- Rapp Manager --> 
   <arg name="rapp_auto_installation"            default="false"  doc="automatically install rapps from the web (not typically used)"/> <!-- http://wiki.ros.org/rocon_app_manager/Tutorials/indigo/Automatic Rapp Installation -->
