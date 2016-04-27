@@ -4,8 +4,6 @@
   <env name="ROSCONSOLE_CONFIG_FILE" 
     value="$(find experiment_launcher)/log_config/custom_rosconsole.conf"/>
 
-  <param name="/use_sim_time" value="true"/>
-
   <!-- Run the map server -->
   <arg name="map_file" default="$(find experiment_launcher)/map/map.yaml"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
