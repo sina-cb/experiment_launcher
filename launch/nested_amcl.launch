@@ -23,8 +23,8 @@
 
   <!-- NESTED AMCL FOR ROBOT 1 -->
 
-  <arg name="nested_amcl/initial_pose_x" value="16.15" />
-  <arg name="nested_amcl/initial_pose_y" value="12.94" />
+  <arg name="nested_amcl/initial_pose_x" value="-2.35" />
+  <arg name="nested_amcl/initial_pose_y" value="-2.11" />
   <arg name="nested_amcl/initial_pose_a" value="00.00" />
   <arg name="run_number" value="$(optenv RUN_NUMBER 1)" />
 

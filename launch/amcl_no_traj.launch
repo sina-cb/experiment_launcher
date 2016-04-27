@@ -21,15 +21,15 @@
     <param name="frame_id" value="/map" />
   </node>-->
 
-  <arg name="amcl/initial_pose_x" value="19.26" />
-  <arg name="amcl/initial_pose_y" value="12.94" />
+  <arg name="amcl/initial_pose_x" value="-2.35" />
+  <arg name="amcl/initial_pose_y" value="-2.11" />
   <arg name="amcl/initial_pose_a" value="00.00" />
   <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
     <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>
     <arg name="initial_pose_a" value="$(arg amcl/initial_pose_a)"/>
   </include>
-  
+
   <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
   
 </launch>
