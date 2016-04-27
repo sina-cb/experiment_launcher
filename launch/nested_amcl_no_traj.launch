@@ -12,36 +12,32 @@
   </node> -->
 
   <!-- NESTED AMCL FOR ROBOT 1 -->
-  <group ns="robot1">
-    <arg name="tf_prefix" value="robot1_tf" />
-    <arg name="nested_amcl/initial_pose_x" value="16.15" />
-    <arg name="nested_amcl/initial_pose_y" value="12.94" />
-    <arg name="nested_amcl/initial_pose_a" value="00.00" />
-    <arg name="run_number" value="$(optenv RUN_NUMBER 1)" />
+  <arg name="nested_amcl/initial_pose_x" value="16.15" />
+  <arg name="nested_amcl/initial_pose_y" value="12.94" />
+  <arg name="nested_amcl/initial_pose_a" value="00.00" />
+  <arg name="run_number" value="$(optenv RUN_NUMBER 1)" />
 
+  <!-- SINA -->
+  <arg name="nested_amcl/initial_leader_pose_x" value="19.26" />
+  <arg name="nested_amcl/initial_leader_pose_y" value="12.94" />
+  <arg name="nested_amcl/initial_leader_pose_a" value="00.00" />
+
+  <include file="$(find experiment_launcher)/launch/includes/nested_amcl_one_robot.launch.xml">
+    <arg name="initial_pose_x" value="$(arg nested_amcl/initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg nested_amcl/initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg nested_amcl/initial_pose_a)"/>
     <!-- SINA -->
-    <arg name="nested_amcl/initial_leader_pose_x" value="19.26" />
-    <arg name="nested_amcl/initial_leader_pose_y" value="12.94" />
-    <arg name="nested_amcl/initial_leader_pose_a" value="00.00" />
+    <arg name="initial_leader_pose_x" value="$(arg nested_amcl/initial_leader_pose_x)"/>
+    <arg name="initial_leader_pose_y" value="$(arg nested_amcl/initial_leader_pose_y)"/>
+    <arg name="initial_leader_pose_a" value="$(arg nested_amcl/initial_leader_pose_a)"/>
+    <arg name="odom_frame_id" value="/odom"/>
+    <arg name="base_frame_id" value="/base_footprint"/>
+    <arg name="global_frame_id" value="/map"/>
+    <arg name="run_number" value="$(arg run_number)"/>
+    <arg name="use_map_topic" value="true"/>
+  </include>
 
-    <include file="$(find experiment_launcher)/launch/includes/nested_amcl_one_robot.launch.xml">
-      <arg name="initial_pose_x" value="$(arg nested_amcl/initial_pose_x)"/>
-      <arg name="initial_pose_y" value="$(arg nested_amcl/initial_pose_y)"/>
-      <arg name="initial_pose_a" value="$(arg nested_amcl/initial_pose_a)"/>
-      <!-- SINA -->
-      <arg name="initial_leader_pose_x" value="$(arg nested_amcl/initial_leader_pose_x)"/>
-      <arg name="initial_leader_pose_y" value="$(arg nested_amcl/initial_leader_pose_y)"/>
-      <arg name="initial_leader_pose_a" value="$(arg nested_amcl/initial_leader_pose_a)"/>
-      <arg name="odom_frame_id" value="/robot1_tf/odom"/>
-      <arg name="base_frame_id" value="/robot1_tf/base_footprint"/>
-      <arg name="global_frame_id" value="/map"/>
-      <arg name="run_number" value="$(arg run_number)"/>
-      <arg name="use_map_topic" value="true"/>
-    </include>
-
-    <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch.xml"/>
-
-  </group>
+  <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch.xml"/>
 
   <!--
   <group ns="robot2">
