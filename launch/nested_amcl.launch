@@ -53,12 +53,12 @@
 
   </group>
 
+  <!--
   <group ns="robot2">
     <arg name="tf_prefix" value="robot2_tf" />
     <arg name="amcl/initial_pose_x" value="19.26" />
     <arg name="amcl/initial_pose_y" value="12.94" />
     <arg name="amcl/initial_pose_a" value="00.00" />
-
     <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
       <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
       <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>
@@ -68,20 +68,14 @@
       <arg name="global_frame_id" value="/map"/>
       <arg name="use_map_topic" value="true"/>
     </include>
-
     <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
-
-    <!-- Trajectory Server -->
-    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina" launch-prefix="xterm -hold -e"> <!-- launch-prefix="xterm -hold -e" -->
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina" launch-prefix="xterm -hold -e">
       <param name="source_frame_name" value="/robot2_tf/base_footprint"/>
       <param name="target_frame_name" value="/map"/>
       <param name="trajectory_update_rate" value="10"/>
       <param name="trajectory_publish_rate" value="10"/>
     </node>
-
   </group>
-
-  <include file="$(find experiment_launcher)/launch/ground_truth_publisher.launch">
-  </include>
+  -->
 
 </launch>
