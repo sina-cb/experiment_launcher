@@ -26,7 +26,7 @@
     <arg name="nested_amcl/initial_leader_pose_y" value="12.94" />
     <arg name="nested_amcl/initial_leader_pose_a" value="00.00" />
 
-    <include file="$(find experiment_launcher)/launch/includes/nested_amcl_one_robot.launch">
+    <include file="$(find experiment_launcher)/launch/includes/nested_amcl_one_robot.launch.xml">
       <arg name="initial_pose_x" value="$(arg nested_amcl/initial_pose_x)"/>
       <arg name="initial_pose_y" value="$(arg nested_amcl/initial_pose_y)"/>
       <arg name="initial_pose_a" value="$(arg nested_amcl/initial_pose_a)"/>
@@ -41,7 +41,7 @@
       <arg name="use_map_topic" value="true"/>
     </include>
 
-    <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch"/>
+    <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch.xml"/>
 
   </group>
 
