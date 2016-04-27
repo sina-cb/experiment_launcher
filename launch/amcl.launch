@@ -4,12 +4,22 @@
   <env name="ROSCONSOLE_CONFIG_FILE" 
     value="$(find experiment_launcher)/log_config/custom_rosconsole.conf"/>
 
+  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml">
+    <arg name="rgb_processing" value="false" />
+    <arg name="depth_registration" value="false" />
+    <arg name="depth_processing" value="false" />
+
+    <!-- We must specify an absolute topic name because if not it will be prefixed by "$(arg camera)".
+       Probably is a bug in the nodelet manager: https://github.com/ros/nodelet_core/issues/7 -->
+    <arg name="scan_topic" value="/scan" />
+  </include>
+
   <!-- Run the map server -->
   <arg name="map_file" default="$(find experiment_launcher)/map/map.yaml"/>
-  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
     <param name="frame_id" value="/map" />
-  </node>
+  </node>-->
 
   <arg name="amcl/initial_pose_x" value="19.26" />
   <arg name="amcl/initial_pose_y" value="12.94" />
@@ -18,14 +28,12 @@
     <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>
     <arg name="initial_pose_a" value="$(arg amcl/initial_pose_a)"/>
-    <arg name="odom_frame_id" value="/robot2_tf/odom"/>
-    <arg name="base_frame_id" value="/robot2_tf/base_footprint"/>
-    <arg name="global_frame_id" value="/map"/>
-    <arg name="use_map_topic" value="true"/>
   </include>
+
   <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
-  <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina" launch-prefix="xterm -hold -e">
-    <param name="source_frame_name" value="/robot2_tf/base_footprint"/>
+
+  <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="sina">
+    <param name="source_frame_name" value="/base_footprint"/>
     <param name="target_frame_name" value="/map"/>
     <param name="trajectory_update_rate" value="10"/>
     <param name="trajectory_publish_rate" value="10"/>

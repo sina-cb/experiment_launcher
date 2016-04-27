@@ -4,16 +4,26 @@
   <env name="ROSCONSOLE_CONFIG_FILE" 
     value="$(find experiment_launcher)/log_config/custom_rosconsole.conf"/>
 
+  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml">
+    <arg name="rgb_processing" value="false" />
+    <arg name="depth_registration" value="false" />
+    <arg name="depth_processing" value="false" />
+
+    <!-- We must specify an absolute topic name because if not it will be prefixed by "$(arg camera)".
+       Probably is a bug in the nodelet manager: https://github.com/ros/nodelet_core/issues/7 -->
+    <arg name="scan_topic" value="/scan" />
+  </include>
+
   <!-- Run the map server -->
   <arg name="map_file" default="$(find experiment_launcher)/map/map.yaml"/>
-  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
     <param name="frame_id" value="/map" />
-  </node>
+  </node>-->
 
   <!-- NESTED AMCL FOR ROBOT 1 -->
-  <arg name="nested_amcl/initial_pose_x" value="16.15" />
-  <arg name="nested_amcl/initial_pose_y" value="12.94" />
+  <arg name="nested_amcl/initial_pose_x" value="-1" />
+  <arg name="nested_amcl/initial_pose_y" value="-2" />
   <arg name="nested_amcl/initial_pose_a" value="00.00" />
   <arg name="run_number" value="$(optenv RUN_NUMBER 1)" />
 
@@ -30,32 +40,8 @@
     <arg name="initial_leader_pose_x" value="$(arg nested_amcl/initial_leader_pose_x)"/>
     <arg name="initial_leader_pose_y" value="$(arg nested_amcl/initial_leader_pose_y)"/>
     <arg name="initial_leader_pose_a" value="$(arg nested_amcl/initial_leader_pose_a)"/>
-    <arg name="odom_frame_id" value="/odom"/>
-    <arg name="base_frame_id" value="/base_footprint"/>
-    <arg name="global_frame_id" value="/map"/>
-    <arg name="run_number" value="$(arg run_number)"/>
-    <arg name="use_map_topic" value="true"/>
   </include>
 
   <include file="$(find experiment_launcher)/launch/includes/nested_move_base_one_robot.launch.xml"/>
-
-  <!--
-  <group ns="robot2">
-    <arg name="tf_prefix" value="robot2_tf" />
-    <arg name="amcl/initial_pose_x" value="19.26" />
-    <arg name="amcl/initial_pose_y" value="12.94" />
-    <arg name="amcl/initial_pose_a" value="00.00" />
-    <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
-      <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
-      <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>
-      <arg name="initial_pose_a" value="$(arg amcl/initial_pose_a)"/>
-      <arg name="odom_frame_id" value="/robot2_tf/odom"/>
-      <arg name="base_frame_id" value="/robot2_tf/base_footprint"/>
-      <arg name="global_frame_id" value="/map"/>
-      <arg name="use_map_topic" value="true"/>
-    </include>
-    <include file="$(find experiment_launcher)/launch/includes/flat_move_base_one_robot.launch"/>
-  </group>
-  -->
 
 </launch>
