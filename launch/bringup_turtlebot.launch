@@ -13,19 +13,22 @@
 
   <param name="/use_sim_time" value="$(arg simulation)"/>
 
-  <include file="$(find experiment_launcher)/launch/includes_phys/robot.launch.xml">
-    <arg name="base" value="$(arg base)" />
-    <arg name="stacks" value="$(arg stacks)" />
-    <arg name="3d_sensor" value="$(arg 3d_sensor)" />
-  </include>
-  <include file="$(find experiment_launcher)/launch/includes_phys/mobile_base.launch.xml">
-    <arg name="base" value="$(arg base)" />
-    <arg name="serialport" value="$(arg serialport)" />
-  </include>
-  <include file="$(find experiment_launcher)/launch/includes_phys/netbook.launch.xml">
-    <arg name="battery" value="$(arg battery)" />
-  </include>
-  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml"/>
+  <group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf"/>
+    <include file="$(find experiment_launcher)/launch/includes_phys/robot.launch.xml">
+      <arg name="base" value="$(arg base)" />
+      <arg name="stacks" value="$(arg stacks)" />
+      <arg name="3d_sensor" value="$(arg 3d_sensor)" />
+    </include>
+    <include file="$(find experiment_launcher)/launch/includes_phys/mobile_base.launch.xml">
+      <arg name="base" value="$(arg base)" />
+      <arg name="serialport" value="$(arg serialport)" />
+    </include>
+    <include file="$(find experiment_launcher)/launch/includes_phys/netbook.launch.xml">
+      <arg name="battery" value="$(arg battery)" />
+    </include>
+    <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml"/>
+  </group>
 
   <!-- Rapp Manager --> 
   <arg name="rapp_auto_installation"            default="false"  doc="automatically install rapps from the web (not typically used)"/> <!-- http://wiki.ros.org/rocon_app_manager/Tutorials/indigo/Automatic Rapp Installation -->
@@ -56,40 +59,42 @@
   <arg name="zeroconf_name"                     default="$(arg robot_name)" doc="the name to identify the master on zeroconf"/>
   <arg name="zeroconf_port"                     default="11311"             doc="port number of the ros master"/>
 
-  <!-- Rapp Manager -->
-  <include file="$(find rocon_app_manager)/launch/standalone.launch">
+  <group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf"/>
+    <!-- Rapp Manager -->
+    <include file="$(find rocon_app_manager)/launch/standalone.launch">
 
-    <!-- Rapp Manager --> 
-    <arg name="robot_name"                        value="$(arg robot_name)" />
-    <arg name="robot_type"                        value="$(arg robot_type)" />
-    <arg name="robot_icon"                        value="$(arg robot_icon)" />
-    <arg name="rapp_package_whitelist"            value="$(arg rapp_package_whitelist)" />
-    <arg name="rapp_package_blacklist"            value="$(arg rapp_package_blacklist)" />
-    <arg name="rapp_preferred_configuration_file" value="$(arg rapp_preferred_configuration_file)" />
-    <arg name="auto_start_rapp"                   value="$(arg rapp_auto_start)" />
-    <arg name="screen"                            value="$(arg rapp_verbose)" />
-    <arg name="auto_rapp_installation"            value="$(arg rapp_auto_installation)" />
+      <!-- Rapp Manager --> 
+      <arg name="robot_name"                        value="$(arg robot_name)" />
+      <arg name="robot_type"                        value="$(arg robot_type)" />
+      <arg name="robot_icon"                        value="$(arg robot_icon)" />
+      <arg name="rapp_package_whitelist"            value="$(arg rapp_package_whitelist)" />
+      <arg name="rapp_package_blacklist"            value="$(arg rapp_package_blacklist)" />
+      <arg name="rapp_preferred_configuration_file" value="$(arg rapp_preferred_configuration_file)" />
+      <arg name="auto_start_rapp"                   value="$(arg rapp_auto_start)" />
+      <arg name="screen"                            value="$(arg rapp_verbose)" />
+      <arg name="auto_rapp_installation"            value="$(arg rapp_auto_installation)" />
 
-    <!-- Rocon Master Info -->
-    <arg name="robot_description"                 value="$(arg robot_description)" />
+      <!-- Rocon Master Info -->
+      <arg name="robot_description"                 value="$(arg robot_description)" />
 
-    <!-- Capabilities --> 
-    <arg name="capabilities"                      value="$(arg capabilities)" />
-    <arg name="capabilities_blacklist"            value="$(arg capabilities_blacklist)" />
-    <arg name="capabilities_nodelet_manager_name" value="$(arg capabilities_nodelet_manager_name)" />
-    <arg name="capabilities_server_name"          value="$(arg capabilities_server_name)" />
-    <arg name="capabilities_package_whitelist"    value="$(arg capabilities_package_whitelist)" />
-    <arg name="capabilities_parameters"           value="$(arg capabilities_parameters)" />
+      <!-- Capabilities --> 
+      <arg name="capabilities"                      value="$(arg capabilities)" />
+      <arg name="capabilities_blacklist"            value="$(arg capabilities_blacklist)" />
+      <arg name="capabilities_nodelet_manager_name" value="$(arg capabilities_nodelet_manager_name)" />
+      <arg name="capabilities_server_name"          value="$(arg capabilities_server_name)" />
+      <arg name="capabilities_package_whitelist"    value="$(arg capabilities_package_whitelist)" />
+      <arg name="capabilities_parameters"           value="$(arg capabilities_parameters)" />
 
-    <!-- Interactions --> 
-    <arg name="interactions"                      value="$(arg interactions)"/>
-    <arg name="interactions_list"                 value="$(arg interactions_list)"/>
+      <!-- Interactions --> 
+      <arg name="interactions"                      value="$(arg interactions)"/>
+      <arg name="interactions_list"                 value="$(arg interactions_list)"/>
 
-    <!-- Zeroconf --> 
-    <arg name="zeroconf"                          value="$(arg zeroconf)"/>
-    <arg name="zeroconf_name"                     value="$(arg zeroconf_name)"/>
-    <arg name="zeroconf_port"                     value="$(arg zeroconf_port)"/>
-
-  </include>
+      <!-- Zeroconf --> 
+      <arg name="zeroconf"                          value="$(arg zeroconf)"/>
+      <arg name="zeroconf_name"                     value="$(arg zeroconf_name)"/>
+      <arg name="zeroconf_port"                     value="$(arg zeroconf_port)"/>
+    </include>
+  </group>
 
 </launch>
