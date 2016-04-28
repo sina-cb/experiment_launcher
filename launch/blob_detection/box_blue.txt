@@ -1,0 +1,5 @@
+[Colors]
+(40, 38, 65) 0.0 1 BLUE_BOX
+
+[Thresholds]
+( 133:150, 80:112 ) 
