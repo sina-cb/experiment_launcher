@@ -2,14 +2,14 @@
 
 c=0;
 
-while [ $c -le 15 ]
+while [ $c -le 2 ]
 do
 	export RUN_NUMBER=$c
 	echo "=========Experiment run_count: "$c
 	/home/sina/indigo_workspace/src/experiment_launcher/shellscripts/launcher.sh
 	c=$((c+1))
-	sleep 20s
-	echo $c
+	sleep 5s
+	echo "=========Experiment run_count: "$c" Finished..."
 done
 
-echo "reached the set run_count limit....ending this set of experiments."
+echo "Finished running exeriment!" | mail -s "Experiment Finished" s.solaimanpour@gmail.com
