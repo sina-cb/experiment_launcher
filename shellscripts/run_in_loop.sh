@@ -1,13 +1,15 @@
-#!/bin/bash
+#! /bin/bash
 
-run_count=0;
+c=0;
 
-while test "$run_count" -lt "100"; do
-	export RUN_NUMBER=$run_count
-	echo "=========Experiment run_count: "$run_count
+while [ $c -le 15 ]
+do
+	export RUN_NUMBER=$c
+	echo "=========Experiment run_count: "$c
 	/home/sina/indigo_workspace/src/experiment_launcher/shellscripts/launcher.sh
-	let "run_count = run_count + 1"
+	c=$((c+1))
 	sleep 20s
+	echo $c
 done
 
 echo "reached the set run_count limit....ending this set of experiments."
