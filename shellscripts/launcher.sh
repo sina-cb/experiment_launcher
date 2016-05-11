@@ -12,7 +12,7 @@ gazeboProc=
 echo "Running Gazebo"
 while [ -z "$gazeboProc" ]; do 
 	
-	xterm -e "roslaunch experiment_launcher two_robots_gazebo_5th_floor.launch" &
+	xterm -e "roslaunch experiment_launcher three_robots_gazebo_5th_floor.launch" &
 	gazeboXterm=$!
 
 	sleep 15s
@@ -35,7 +35,7 @@ cmvisionProc=
 echo "Running cmvision"
 while [ -z "$cmvisionProc" ]; do 
 	
-	xterm -e "roslaunch experiment_launcher cmvision_node.launch" &
+	xterm -e "roslaunch experiment_launcher cmvision.launch" &
 	cmvisionXterm=$!
 
 	sleep 5s
@@ -86,8 +86,30 @@ while :; do
 	fi
 done
 
-echo "Sleeping for 60 seconds till nested_amcl is initialized..."
-sleep 60s
+echo "Sleeping for 20 seconds till nested_amcl is initialized..."
+sleep 20s
+
+# Script for guaranteed safe start of floor5_robot3
+floor5_robot3Xterm=
+floor5_robot3Proc=
+echo "Running Robot3 Proc"
+while [ -z "$floor5_robot3Proc" ]; do 
+	
+	xterm -e "rosrun experiment_launcher floor5_robot3" &
+	floor5_robot3Xterm=$!
+
+	sleep 2s
+
+	floor5_robot3Proc=$(pidof floor5_robot3)
+
+	if test -z "$floor5_robot3Proc"; then
+		kill $floor5_robot3Xterm
+		sleep 5s
+		kill -9 $floor5_robot3Xterm
+		sleep 5s
+		echo "Had to force kill floor5_robot3 xterm...restarting it"
+	fi
+done
 
 # Script for guaranteed safe start of floor5_robot1
 floor5_robot1Xterm=
@@ -111,8 +133,8 @@ while [ -z "$floor5_robot1Proc" ]; do
 	fi
 done
 
-echo "Sleeping for 30 seconds"
-sleep 30s
+echo "Sleeping for 10 seconds"
+sleep 10s
 
 # Script for guaranteed safe start of floor5_robot2
 floor5_robot2Xterm=
@@ -163,11 +185,11 @@ while :; do
 #		rostopic pub -1 /robot1_experiment_state std_msgs/String 'amclProc crashed'
 		echo "amclProc crashed"
 		break
-	elif test $diff -gt "1200"; then
+	elif test $diff -gt "950"; then
 #		rostopic pub -1 /robot1_experiment_state std_msgs/String 'experiment timed out'
 		echo "experiment timed out"
 		break
-	elif test $((current_time-absolute_start_time)) -gt "1200"; then
+	elif test $((current_time-absolute_start_time)) -gt "950"; then
 #		rostopic pub -1 /robot1_experiment_state std_msgs/String 'shell timed out'
 		echo "shell timed out"
 		break	
