@@ -61,6 +61,14 @@ Floor5_Robot1::Floor5_Robot1()
     waypoint->orientation.z = 0.0;
     waypoint->orientation.w = 1.0;
     waypoints.push_back(*waypoint);
+//    waypoint->position.x = 31.85;
+//    waypoint->position.y = 3.21;
+//    quat.setRPY(0, 0, -3.12);
+//    waypoint->orientation.x = quat.getX();
+//    waypoint->orientation.y = quat.getY();
+//    waypoint->orientation.z = quat.getZ();
+//    waypoint->orientation.w = quat.getW();
+//    waypoints.push_back(*waypoint);
 
     counter = 0;
 
