@@ -2,7 +2,7 @@
 
 c=0;
 
-while [ $c -le 15 ]
+while [ $c -le 3 ]
 do
 	export RUN_NUMBER=$c
 	echo "=========Experiment run_count: "$c
