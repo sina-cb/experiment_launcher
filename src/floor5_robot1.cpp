@@ -70,6 +70,8 @@ Floor5_Robot1::Floor5_Robot1()
 
     my_pose_x = 0.0;
     my_pose_y = 0.0;
+
+    ROS_ERROR("Done initing!!!!");
 }
 
 void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communication){
@@ -97,8 +99,11 @@ void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communicati
 void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
 
     if (following_stage){
+        ROS_ERROR("RETURN");
         return;
     }
+
+    ROS_ERROR("Don't RETURN");
 
     set_move_base_max_vel(0.3);
 
@@ -253,11 +258,13 @@ void Floor5_Robot1::set_move_base_max_vel(double new_vel){
 
     srv_req.config = conf;
 
-    ros::service::call("/robot1/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
+    ros::service::call("/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
 
 }
 
 void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
+
+    ROS_ERROR("LASER");
 
     max_beams = laser_scan->ranges.size();
 
