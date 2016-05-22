@@ -16,7 +16,7 @@
   <arg name="feature_filename" default="$(find experiment_launcher)/map/features.txt"/>
   <arg name="run_number" default="0"/>
 
-  <node pkg="nested_amcl" type="nested_amcl" name="nested_amcl"> <!-- launch-prefix="xterm -hold -e" or "xterm -hold -e gdb -args"-->
+  <node pkg="nested_amcl" type="nested_amcl" name="nested_amcl" launch-prefix="xterm -hold -e"> <!-- launch-prefix="xterm -hold -e" or "xterm -hold -e gdb -args"-->
     <param name="use_map_topic"             value="$(arg use_map_topic)"/>
     <!-- Publish scans from best pose at a max of 10 Hz -->
     <param name="odom_model_type"           value="diff"/>
