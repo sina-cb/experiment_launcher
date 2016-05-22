@@ -10,60 +10,36 @@ floor5_robot2::floor5_robot2()
 {
     ros::NodeHandle n;
 
-    robot2_goal_status_sub = n.subscribe("/robot2/move_base/status", 1, &floor5_robot2::robot2_goal_status_Callback, this);
-    amcl_pose_sub = n.subscribe("/robot2/amcl_pose", 1, &floor5_robot2::amcl_Callback, this);
+    robot2_goal_status_sub = n.subscribe("/move_base/status", 1, &floor5_robot2::robot2_goal_status_Callback, this);
+    amcl_pose_sub = n.subscribe("/amcl_pose", 1, &floor5_robot2::amcl_Callback, this);
 
-    goal_pub2_ = n.advertise<geometry_msgs::PoseStamped>("/robot2/move_base_simple/goal", 1);
-    robot_1_communication = n.advertise<std_msgs::String>("/robot2/robot1_communication", 1);
+    goal_pub2_ = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
+    robot_1_communication = n.advertise<std_msgs::String>("/robot1_communication", 1);
 
     fixed_frame = std::string("/map");
 
     x = 0;
     y = 0;
 
-    set_move_base_max_vel(0.4);
+    set_move_base_max_vel(0.2);
 
     //1
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 30.21;
-    waypoint->position.y = 13.09;
+    waypoint->position.x = 5.35;
+    waypoint->position.y = 0.93;
     quat.setRPY(0, 0, 0);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
     waypoint->orientation.w = quat.getW();
     waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
+    velocities.push_back(0.2);
 
     //2
     waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.91;
-    waypoint->position.y = 9.78;
-    quat.setRPY(0, 0, -M_PI/3);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //3
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.88;
-    waypoint->position.y = 8.93;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //3.5
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 35.0825;
-    waypoint->position.y = 6.25;
-    quat.setRPY(0, 0, -M_PI/2);
+    waypoint->position.x = 5.09;
+    waypoint->position.y = -0.17;
+    quat.setRPY(0, 0, -M_PI);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
@@ -71,163 +47,7 @@ floor5_robot2::floor5_robot2()
     waypoints.push_back(*waypoint);
     velocities.push_back(0.2);
 
-    //4
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.32;
-    waypoint->position.y = 3.04;
-    quat.setRPY(0, 0, (-2 * M_PI / 3));
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
 
-    //5
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 28.74;
-    waypoint->position.y = 4.90;
-    quat.setRPY(0, 0, -M_PI);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //6
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 21.70;
-    waypoint->position.y = 6.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //7
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 22.72;
-    waypoint->position.y = 12.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    // Loop Completed
-
-    //8
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 30.21;
-    waypoint->position.y = 13.09;
-    quat.setRPY(0, 0, 0);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //9
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.91;
-    waypoint->position.y = 9.78;
-    quat.setRPY(0, 0, -M_PI/3);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //10
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.88;
-    waypoint->position.y = 8.93;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //10.5
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 35.0825;
-    waypoint->position.y = 6.25;
-    quat.setRPY(0, 0, -M_PI/2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.2);
-
-    //11
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 34.32;
-    waypoint->position.y = 3.04;
-    quat.setRPY(0, 0, (-2 * M_PI / 3));
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //12
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 28.74;
-    waypoint->position.y = 4.90;
-    quat.setRPY(0, 0, -M_PI);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //13
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 21.70;
-    waypoint->position.y = 6.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //14
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 22.72;
-    waypoint->position.y = 12.97;
-    quat.setRPY(0, 0, M_PI / 2);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
-
-    //15
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 29.95;
-    waypoint->position.y = 12.93;
-    quat.setRPY(0, 0, 0);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-    velocities.push_back(0.4);
 
     counter = 0;
 
@@ -350,7 +170,7 @@ void floor5_robot2::set_move_base_max_vel(double new_vel){
 
     srv_req.config = conf;
 
-    ros::service::call("/robot2/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
+    ros::service::call("/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
 
 }
 

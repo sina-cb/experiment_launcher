@@ -53,19 +53,9 @@ Floor5_Robot1::Floor5_Robot1()
     y       = 0;
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 5.09;
-    waypoint->position.y = -0.17;
-    quat.setRPY(0, 0, -M_PI);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-
-    waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 2.44;
-    waypoint->position.y = -0.39;
-    quat.setRPY(0, 0, -M_PI);
+    waypoint->position.x = 5.35;
+    waypoint->position.y = 1.10;
+    quat.setRPY(0, 0, -M_PI/2);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
