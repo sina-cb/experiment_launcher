@@ -53,9 +53,19 @@ Floor5_Robot1::Floor5_Robot1()
     y       = 0;
 
     geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 1.95;
-    waypoint->position.y = 1.25;
-    quat.setRPY(0, 0, -1.5);
+    waypoint->position.x = 5.09;
+    waypoint->position.y = -0.17;
+    quat.setRPY(0, 0, -M_PI);
+    waypoint->orientation.x = quat.getX();
+    waypoint->orientation.y = quat.getY();
+    waypoint->orientation.z = quat.getZ();
+    waypoint->orientation.w = quat.getW();
+    waypoints.push_back(*waypoint);
+
+    waypoint = new geometry_msgs::Pose();
+    waypoint->position.x = 2.44;
+    waypoint->position.y = -0.39;
+    quat.setRPY(0, 0, -M_PI);
     waypoint->orientation.x = quat.getX();
     waypoint->orientation.y = quat.getY();
     waypoint->orientation.z = quat.getZ();
@@ -84,23 +94,6 @@ Floor5_Robot1::Floor5_Robot1()
 
 void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communication){
 
-    ROS_ERROR("Got this msg: %s", ((string)communication.data).c_str());
-
-    follow_or_not = false;
-    publish_goal_flag = true;
-    seeking_waypoint = false;
-    loaded_waypoint  = false;
-    following_stage = false;
-
-    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 14.55;
-    waypoint->position.y = 12.62;
-    quat.setRPY(0, 0, -1.7);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
 
 }
 
@@ -235,35 +228,6 @@ void Floor5_Robot1::color_blob_Callback(const cmvision::BlobsConstPtr &Blobs){
 
 void Floor5_Robot1::set_move_base_max_vel(double new_vel){
 
-    dynamic_reconfigure::ReconfigureRequest srv_req;
-    dynamic_reconfigure::ReconfigureResponse srv_resp;
-    dynamic_reconfigure::DoubleParameter double_param;
-    dynamic_reconfigure::Config conf;
-
-    double_param.name = "max_trans_vel";
-    double_param.value = new_vel;
-    conf.doubles.push_back(double_param);
-
-    double_param.name = "max_vel_x";
-    double_param.value = new_vel;
-    conf.doubles.push_back(double_param);
-
-    double_param.name = "min_vel_x";
-    double_param.value = new_vel;
-    conf.doubles.push_back(double_param);
-
-    double_param.name = "min_trans_vel";
-    double_param.value = new_vel;
-    conf.doubles.push_back(double_param);
-
-    //    double_param.name = "kurtana_roll_joint";
-    //    double_param.value = yaw;
-    //    conf.doubles.push_back(double_param);
-
-    srv_req.config = conf;
-
-    ros::service::call("/move_base/DWAPlannerROS/set_parameters", srv_req, srv_resp);
-
 }
 
 void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
@@ -339,22 +303,22 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
         if( (current_timestamp - color_seen_time) > max_lost_time){ // not seen leader for more than 60 seconds
             ROS_ERROR("----Lost sight of the leader for %d second, we're using the last known nested_particle_pose and go towards it----", max_lost_time);
 
-//            leader_distance = std::sqrt(std::pow(leader_pose_x - my_pose_x, 2) + std::pow(leader_pose_y - my_pose_y, 2));
-//            double temp_theta = std::asin((leader_pose_y - my_pose_y) / leader_distance);
-//            last_seen_theta = -1 * (my_pose_theta - temp_theta);
+            //            leader_distance = std::sqrt(std::pow(leader_pose_x - my_pose_x, 2) + std::pow(leader_pose_y - my_pose_y, 2));
+            //            double temp_theta = std::asin((leader_pose_y - my_pose_y) / leader_distance);
+            //            last_seen_theta = -1 * (my_pose_theta - temp_theta);
 
             double angle_correction = std::asin((leader_pose_x - my_pose_x) / std::sqrt(std::pow(leader_pose_x - my_pose_x, 2)
                                                                                         + std::pow(leader_pose_y - my_pose_y, 2)));
 
-//            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-//            waypoint->position.x = leader_pose_x;
-//            waypoint->position.y = leader_pose_y;
-//            quat.setRPY(0, 0, (leader_theta + angle_correction));
-//            waypoint->orientation.w = quat.getW();
-//            waypoint->orientation.x = quat.getX();
-//            waypoint->orientation.y = quat.getY();
-//            waypoint->orientation.z = quat.getZ();
-//            waypoints.push_back(*waypoint);
+            //            geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+            //            waypoint->position.x = leader_pose_x;
+            //            waypoint->position.y = leader_pose_y;
+            //            quat.setRPY(0, 0, (leader_theta + angle_correction));
+            //            waypoint->orientation.w = quat.getW();
+            //            waypoint->orientation.x = quat.getX();
+            //            waypoint->orientation.y = quat.getY();
+            //            waypoint->orientation.z = quat.getZ();
+            //            waypoints.push_back(*waypoint);
 
             seeking_waypoint = false;
             loaded_waypoint  = false;
