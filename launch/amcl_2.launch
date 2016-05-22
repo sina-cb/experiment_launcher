@@ -21,9 +21,9 @@
     <param name="frame_id" value="/map" />
   </node>-->
 
-  <arg name="amcl/initial_pose_x" value="0" />
-  <arg name="amcl/initial_pose_y" value="0" />
-  <arg name="amcl/initial_pose_a" value="0" />
+  <arg name="amcl/initial_pose_x" value="5.35" />
+  <arg name="amcl/initial_pose_y" value="0.93" />
+  <arg name="amcl/initial_pose_a" value="-1.57" />
   <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
     <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>

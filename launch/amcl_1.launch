@@ -4,7 +4,7 @@
   <env name="ROSCONSOLE_CONFIG_FILE" 
     value="$(find experiment_launcher)/log_config/custom_rosconsole.conf"/>
 
-  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor_freenect.launch.xml">
+  <include file="$(find experiment_launcher)/launch/includes_phys/3dsensor.launch.xml">
     <arg name="rgb_processing" value="false" />
     <arg name="depth_registration" value="false" />
     <arg name="depth_processing" value="false" />
@@ -21,9 +21,9 @@
     <param name="frame_id" value="/map" />
   </node>-->
 
-  <arg name="amcl/initial_pose_x" value="0" />
-  <arg name="amcl/initial_pose_y" value="0" />
-  <arg name="amcl/initial_pose_a" value="0" />
+  <arg name="amcl/initial_pose_x" value="5.35" />
+  <arg name="amcl/initial_pose_y" value="1.10" />
+  <arg name="amcl/initial_pose_a" value="-1.57" />
   <include file="$(find experiment_launcher)/launch/includes/flat_amcl_one_robot.launch">
     <arg name="initial_pose_x" value="$(arg amcl/initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg amcl/initial_pose_y)"/>
