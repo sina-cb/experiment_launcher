@@ -78,22 +78,6 @@ void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communicati
 
     ROS_ERROR("Got this msg: %s", ((string)communication.data).c_str());
 
-    follow_or_not = false;
-    publish_goal_flag = true;
-    seeking_waypoint = false;
-    loaded_waypoint  = false;
-    following_stage = false;
-
-    geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
-    waypoint->position.x = 2.44;
-    waypoint->position.y = -0.39;
-    quat.setRPY(0, 0, -1.7);
-    waypoint->orientation.x = quat.getX();
-    waypoint->orientation.y = quat.getY();
-    waypoint->orientation.z = quat.getZ();
-    waypoint->orientation.w = quat.getW();
-    waypoints.push_back(*waypoint);
-
 }
 
 void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
@@ -263,9 +247,6 @@ void Floor5_Robot1::set_move_base_max_vel(double new_vel){
 }
 
 void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
-
-    ROS_ERROR("LASER");
-
     max_beams = laser_scan->ranges.size();
 
     double current_range = 0.0;
@@ -436,7 +417,20 @@ void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStamped
     if (abs(my_pose_x - 0/*2.44*/) < 1.0 &&  abs(my_pose_y - 0/*(-0.39)*/) < 1.0){
         ROS_ERROR("DONE Following!!");
         follow_or_not = false;
+        publish_goal_flag = true;
+        seeking_waypoint = false;
+        loaded_waypoint  = false;
         following_stage = false;
+
+        geometry_msgs::Pose *waypoint = new geometry_msgs::Pose();
+        waypoint->position.x = 1.0;
+        waypoint->position.y = 1.0;
+        quat.setRPY(0, 0, 0);
+        waypoint->orientation.x = quat.getX();
+        waypoint->orientation.y = quat.getY();
+        waypoint->orientation.z = quat.getZ();
+        waypoint->orientation.w = quat.getW();
+        waypoints.push_back(*waypoint);
     }
 
 }
