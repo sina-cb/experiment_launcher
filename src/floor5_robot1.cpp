@@ -130,6 +130,8 @@ void Floor5_Robot1::set_move_base_max_vel(double new_vel){
 
 void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_scan){
 
+    ROS_ERROR("AAAA");
+
     max_beams = laser_scan->ranges.size();
 
     double current_range = 0.0;
