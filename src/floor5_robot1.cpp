@@ -31,6 +31,7 @@ namespace floor5_robot1{
 
 Floor5_Robot1::Floor5_Robot1()
 {
+    ROS_ERROR("11111");
     // Subscribers
     laser_sub = n.subscribe("/scan", 1, &Floor5_Robot1::laser_Callback,this);
     color_blob_sub = n.subscribe("/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
