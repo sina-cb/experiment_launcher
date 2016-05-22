@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg)
 find_package(LibXml2 2.6.0 REQUIRED)
 
 # Find Armadillo library
-find_package(Armadillo REQUIRED)
+# find_package(Armadillo REQUIRED)
 
 catkin_package(
 
