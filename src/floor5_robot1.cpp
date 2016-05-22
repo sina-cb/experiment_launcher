@@ -33,16 +33,10 @@ Floor5_Robot1::Floor5_Robot1()
 {
     // Subscribers
     laser_sub = n.subscribe("/scan", 1, &Floor5_Robot1::laser_Callback,this);
-    goal_status_sub = n.subscribe("/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
     color_blob_sub = n.subscribe("/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
-    amcl_sub = n.subscribe("/amcl_pose", 1, &Floor5_Robot1::amcl_Callback, this);
-    nested_amcl_sub = n.subscribe("/nested_amcl_pose", 1, &Floor5_Robot1::nested_amcl_Callback, this);
-    robot1_communication = n.subscribe("/robot2/robot1_communication", 1, &Floor5_Robot1::communication_2_Callback, this);
 
     // Publishers
     vel_pub_ = n.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/teleop", 1);
-    goal_pub1_ = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
-    cancel_goal_pub_ = n.advertise<actionlib_msgs::GoalID>("/move_base/cancel", 1);
     robot1_exp_state_pub_ = n.advertise<std_msgs::String>("/robot1_experiment_state", 1);
 
     fixed_frame = std::string("/map");
@@ -84,92 +78,6 @@ Floor5_Robot1::Floor5_Robot1()
 
 void Floor5_Robot1::communication_2_Callback(const std_msgs::String &communication){
 
-
-}
-
-void Floor5_Robot1::goal_status_Callback(const actionlib_msgs::GoalStatusArrayConstPtr &status_array){
-
-    set_move_base_max_vel(0.3);
-
-    std::stringstream state_stream;
-    std_msgs::String state_msg;
-
-    if(!following_stage){
-        actionlib_msgs::GoalStatus status_list_;
-        geometry_msgs::PoseStamped goal1;
-
-        if(!status_array->status_list.empty()){
-            status_list_ = status_array->status_list.back();
-
-
-            if(robot1_goalStatus != status_list_.status
-                    || robot1_status_goal_id.compare(status_list_.goal_id.id) != 0 ){
-                ROS_INFO("Robot1 Status: %d \tGoal ID: %s", status_list_.status, status_list_.goal_id.id.c_str());
-            }
-
-            current_goal_id = status_list_.goal_id;
-            robot1_goalStatus = status_list_.status;
-            robot1_status_goal_id = status_list_.goal_id.id;
-        }
-        else{
-            ROS_INFO("Robot1 No status received ... publishing goal again");
-            publish_goal_flag = true;
-        }
-
-        if(!seeking_waypoint){
-            if(!loaded_waypoint){
-                x = waypoints[counter].position.x;
-                y = waypoints[counter].position.y;
-
-                quat.setX(waypoints[counter].orientation.x);
-                quat.setY(waypoints[counter].orientation.y);
-                quat.setZ(waypoints[counter].orientation.z);
-                quat.setW(waypoints[counter].orientation.w);
-
-                loaded_waypoint = true;
-                publish_goal_flag = true;
-                seeking_waypoint = true;
-            }
-        }
-
-        tf::Stamped<tf::Pose> p1 = tf::Stamped<tf::Pose>(tf::Pose(quat, tf::Point(x, y, 0.0)), ros::Time::now(), fixed_frame);
-        tf::poseStampedTFToMsg(p1, goal1);
-
-        if(publish_goal_flag){
-            goal_pub1_.publish(goal1);
-            ROS_INFO("Robot 1 seeking point : %f, %f ", x, y);
-            publish_goal_flag = false;
-        }
-
-        if(robot1_goalStatus == 1){
-            publish_goal_flag = false;
-        }
-
-
-        if(seeking_waypoint
-                && !following_stage){
-            if(my_pose_x <= (waypoints[counter].position.x + DELTA_LINEAR)
-                    && my_pose_x >= (waypoints[counter].position.x - DELTA_LINEAR)
-                    && my_pose_y <= (waypoints[counter].position.y + DELTA_LINEAR)
-                    && my_pose_y >= (waypoints[counter].position.y - DELTA_LINEAR)
-                    ){
-
-                ROS_INFO("Robot1 reached Waypoint %d", (int)(counter));
-                seeking_waypoint = false;
-                loaded_waypoint  = false;
-                publish_goal_flag = true;
-
-                if (follow_or_not)
-                    following_stage = true;
-
-                counter++;
-                if (counter >= waypoints.size()){
-                    ROS_INFO("Reached the final goal!");
-                }
-            }
-        }
-
-    }
 
 }
 
@@ -229,7 +137,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
     bool got_leader_distance = false;
 
-
     // Get current timestamp
     struct timeval tp;
     gettimeofday(&tp, NULL);
@@ -245,7 +152,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
         state_stream << "nested_amcl_stuck reporting as crashed";
         state_msg.data = state_stream.str();
-        robot1_exp_state_pub_.publish(state_msg);
     }
 
     if(color_centroid_x >= 0.0){
@@ -282,8 +188,6 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
         seeking_waypoint = false;
         following_stage = true;
 
-        cancel_goal_pub_.publish(current_goal_id);
-
         ROS_INFO("Robot1 switching to follower behaviour now because we found the leader again!");
     }
 
@@ -312,9 +216,9 @@ void Floor5_Robot1::laser_Callback(const sensor_msgs::LaserScanConstPtr& laser_s
 
             seeking_waypoint = false;
             loaded_waypoint  = false;
-            following_stage = false;
+            following_stage = true;
 
-            set_move_base_max_vel(0.55);
+            set_move_base_max_vel(0.3);
 
             std::stringstream state_stream;
             std_msgs::String state_msg;
