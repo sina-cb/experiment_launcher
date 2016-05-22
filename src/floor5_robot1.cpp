@@ -32,17 +32,17 @@ namespace floor5_robot1{
 Floor5_Robot1::Floor5_Robot1()
 {
     // Subscribers
-    laser_sub = n.subscribe("/robot1/scan", 1, &Floor5_Robot1::laser_Callback,this);
-    goal_status_sub = n.subscribe("/robot1/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
-    color_blob_sub = n.subscribe("/robot1/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
-    amcl_sub = n.subscribe("/robot1/amcl_pose", 1, &Floor5_Robot1::amcl_Callback, this);
-    nested_amcl_sub = n.subscribe("/robot1/nested_amcl_pose", 1, &Floor5_Robot1::nested_amcl_Callback, this);
+    laser_sub = n.subscribe("/scan", 1, &Floor5_Robot1::laser_Callback,this);
+    goal_status_sub = n.subscribe("/move_base/status", 1, &Floor5_Robot1::goal_status_Callback, this);
+    color_blob_sub = n.subscribe("/blobs", 1, &Floor5_Robot1::color_blob_Callback, this);
+    amcl_sub = n.subscribe("/amcl_pose", 1, &Floor5_Robot1::amcl_Callback, this);
+    nested_amcl_sub = n.subscribe("/nested_amcl_pose", 1, &Floor5_Robot1::nested_amcl_Callback, this);
     robot1_communication = n.subscribe("/robot2/robot1_communication", 1, &Floor5_Robot1::communication_2_Callback, this);
 
     // Publishers
-    vel_pub_ = n.advertise<geometry_msgs::Twist>("/robot1/cmd_vel_mux/input/teleop", 1);
-    goal_pub1_ = n.advertise<geometry_msgs::PoseStamped>("/robot1/move_base_simple/goal", 1);
-    cancel_goal_pub_ = n.advertise<actionlib_msgs::GoalID>("/robot1/move_base/cancel", 1);
+    vel_pub_ = n.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/teleop", 1);
+    goal_pub1_ = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
+    cancel_goal_pub_ = n.advertise<actionlib_msgs::GoalID>("/move_base/cancel", 1);
     robot1_exp_state_pub_ = n.advertise<std_msgs::String>("/robot1_experiment_state", 1);
 
     fixed_frame = std::string("/map");
