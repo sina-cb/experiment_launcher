@@ -414,7 +414,7 @@ void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStamped
     std::stringstream state_stream;
     std_msgs::String state_msg;
 
-    if (abs(my_pose_x - 0/*2.44*/) < 1.0 &&  abs(my_pose_y - 0/*(-0.39)*/) < 1.0){
+    if (abs(my_pose_x - /*0*/2.44) < 1.0 &&  abs(my_pose_y - /*0*/(-0.39)) < 1.0){
         ROS_ERROR("DONE Following!!");
         follow_or_not = false;
         publish_goal_flag = true;
