@@ -68,7 +68,7 @@ Floor5_Robot1::Floor5_Robot1()
 
     seeking_waypoint = false;
     loaded_waypoint  = false;
-    following_stage = false;
+    following_stage = true;
 
     color_centroid_x = -99;
     color_centroid_y = -99;
