@@ -433,16 +433,11 @@ void Floor5_Robot1::amcl_Callback(const geometry_msgs::PoseWithCovarianceStamped
     std::stringstream state_stream;
     std_msgs::String state_msg;
 
-    if(seeking_waypoint){
-        state_stream << "seeking waypoint " << counter;
-        state_msg.data = state_stream.str();
-        robot1_exp_state_pub_.publish(state_msg);
+    if (abs(my_pose_x - 2.44) < 1.0 &&  abs(my_pose_y - (-0.39)) < 1.0){
+        follow_or_not = false;
+        following_stage = false;
     }
-    else if(following_stage){
-        state_stream << "following stage";
-        state_msg.data = state_stream.str();
-        robot1_exp_state_pub_.publish(state_msg);
-    }
+
 }
 
 void Floor5_Robot1::nested_amcl_Callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &nested_amcl_pose){
